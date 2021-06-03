@@ -1,0 +1,62 @@
+{
+  "name": "vue3-music",
+  "version": "0.0.1",
+  "description": "一款基于vue3开发的音乐app",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack server --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuya6/vue3-typescript-webpack.git"
+  },
+  "author": "liuya6",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liuya6/vue3-typescript-webpack/issues"
+  },
+  "homepage": "https://github.com/liuya6/vue3-typescript-webpack#readme",
+  "devDependencies": {
+    "@babel/core": "^7.14.3",
+    "@babel/plugin-transform-runtime": "^7.14.3",
+    "@babel/preset-env": "^7.14.2",
+    "@babel/preset-typescript": "^7.13.0",
+    "@vue/compiler-sfc": "^3.0.11",
+    "autoprefixer": "^10.2.5",
+    "babel-loader": "^8.2.2",
+    "babel-plugin-import": "^1.13.3",
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "css-loader": "^5.2.5",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.3.1",
+    "less": "^4.1.1",
+    "less-loader": "^9.0.0",
+    "mini-css-extract-plugin": "^1.6.0",
+    "optimize-css-assets-webpack-plugin": "^6.0.0",
+    "postcss-loader": "^5.3.0",
+    "postcss-pxtorem": "^6.0.0",
+    "prettier": "^2.3.0",
+    "style-loader": "^2.0.0",
+    "style-resources-loader": "^1.4.1",
+    "terser-webpack-plugin": "^5.1.2",
+    "ts-loader": "^9.2.2",
+    "typescript": "^4.2.4",
+    "url-loader": "^4.1.1",
+    "vue-loader": "^16.2.0",
+    "webpack": "^5.37.1",
+    "webpack-cli": "^4.7.0",
+    "webpack-dev-server": "^3.11.2",
+    "webpack-merge": "^5.7.3"
+  },
+  "dependencies": {
+    "amfe-flexible": "^2.2.1",
+    "axios": "^0.21.1",
+    "reset-css": "^5.0.1",
+    "vant": "^3.0.16",
+    "vue": "^3.0.11",
+    "vue-router": "^4.0.8",
+    "vuex": "^4.0.0"
+  }
+}
