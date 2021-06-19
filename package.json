@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack server --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --config webpack.prod.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +30,7 @@
     "css-loader": "^5.2.5",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.1",
+    "jest": "^27.0.4",
     "less": "^4.1.1",
     "less-loader": "^9.0.0",
     "mini-css-extract-plugin": "^1.6.0",
@@ -53,6 +53,7 @@
   "dependencies": {
     "amfe-flexible": "^2.2.1",
     "axios": "^0.21.1",
+    "pinyin": "^2.10.2",
     "reset-css": "^5.0.1",
     "vant": "^3.0.16",
     "vue": "^3.0.11",

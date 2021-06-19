@@ -13,6 +13,7 @@
       </li>
     </ul>
   </div>
+  <div class="displace"></div>
 </template>
 
 <script lang="ts">
@@ -42,9 +43,15 @@ export default {
 
 <style scoped lang="less">
 .homeHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 88px;
   background-color: @theme;
   color: #fff;
   font-size: 15px;
+  z-index: 99;
   .top {
     height: 44px;
     display: flex;
@@ -87,5 +94,8 @@ export default {
       }
     }
   }
+}
+.displace {
+  height: 88px;
 }
 </style>

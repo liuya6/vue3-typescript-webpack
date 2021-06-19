@@ -1,6 +1,14 @@
 <template>
-  <HomeHeader />
-  <router-view />
+  <div class="home">
+    <HomeHeader />
+    <div class="homeContent">
+      <router-view v-slot:="{ Component }">
+        <keep-alive>
+          <component :is="Component"></component>
+        </keep-alive>
+      </router-view>
+    </div>
+  </div>
 </template>
 
 <script>

@@ -23,33 +23,39 @@
   </div>
 </template>
 <script lang="ts">
-type myNum = 1 | 2 | 3;
-
 import { homeHttp } from "@/api/index";
-import { onMounted, reactive, watchEffect, computed, toRefs, ref } from "vue";
-export default {
+import { onMounted, reactive, toRefs, defineComponent, onActivated } from "vue";
+export default defineComponent({
   name: "Recommend",
+
   setup() {
     let homeData = reactive({
       banners: [],
       playlists: [],
     });
+
     const filterCount = (count: number) => {
       return `${Math.floor(count / 10000)}万`;
     };
+
     onMounted(async () => {
       const res = await homeHttp.getHomePage();
       const recommendData = await homeHttp.getMusicRecommend();
       homeData.banners = res.data.data["blocks"][0]["extInfo"]["banners"];
       homeData.playlists = recommendData.data["playlists"];
-      console.log(homeData.playlists);
+      // console.log(homeData);
     });
+
+    // onActivated(() => {
+    //   console.log("onActivated");
+    // });
+
     return {
       ...toRefs(homeData),
       filterCount,
     };
   },
-};
+});
 </script>
 
 <style scoped lang="less">

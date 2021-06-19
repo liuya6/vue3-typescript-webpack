@@ -1,9 +1,67 @@
-<template>rink</template>
+<template>
+  <dl v-for="item in list" :key="item.id">
+    <dt>
+      <img :src="item.coverImgUrl" alt="" />
+    </dt>
+    <dd v-for="(child, i) in item.tracks">
+      {{ `${i + 1}. ${child.first}-${child.second}` }}
+    </dd>
+  </dl>
+</template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, onMounted, reactive, toRefs } from "vue";
+import { homeHttp } from "@/api/index";
+
+export default defineComponent({
   name: "Ranking",
-};
+  setup() {
+    let rankData = reactive({
+      list: [],
+    });
+
+    onMounted(async () => {
+      const res = await homeHttp.getRanking();
+      rankData.list = res.data.list.filter(
+        (item: { tracks: string | any[] }) => item.tracks.length
+      );
+      console.log(rankData.list);
+    });
+
+    return {
+      ...toRefs(rankData),
+    };
+  },
+});
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+dl {
+  margin: 0 10px;
+  padding: 5px 0;
+  overflow: hidden;
+  border-bottom: 1px solid #e1e2e2;
+  font-size: 20px;
+  &:last-child {
+    border-bottom: none;
+  }
+  dt {
+    float: left;
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  dd {
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 15px;
+    color: #2b2b33;
+    line-height: 33px;
+    text-overflow: ellipsis;
+  }
+}
+</style>
