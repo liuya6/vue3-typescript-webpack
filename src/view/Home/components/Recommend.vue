@@ -9,9 +9,20 @@
   <div class="content">
     <h1>推荐歌单</h1>
     <ul>
-      <li v-for="item in playlists" :key="item.id">
+      <li
+        v-for="item in playlists"
+        :key="item.id"
+        @click="
+          $router.push({
+            name: 'musicDetail',
+            query: {
+              id: item.id,
+            },
+          })
+        "
+      >
         <div>
-          <img v-lazy="item.coverImgUrl" alt="" />
+          <img v-lazy="`${item.coverImgUrl}?param=200y200`" alt="" />
           <p>
             <span class="iconfont">&#xe619;</span
             >{{ filterCount(item.playCount) }}
@@ -23,20 +34,16 @@
   </div>
 </template>
 <script lang="ts">
-import { homeHttp } from "@/api/index";
-import { onMounted, reactive, toRefs, defineComponent, onActivated } from "vue";
+import { homeHttp } from "@/api";
+import { onMounted, reactive, toRefs, defineComponent } from "vue";
+import { filterCount } from "@/utils/filter";
 export default defineComponent({
   name: "Recommend",
-
   setup() {
     let homeData = reactive({
       banners: [],
       playlists: [],
     });
-
-    const filterCount = (count: number) => {
-      return `${Math.floor(count / 10000)}万`;
-    };
 
     onMounted(async () => {
       const res = await homeHttp.getHomePage();
@@ -45,10 +52,6 @@ export default defineComponent({
       homeData.playlists = recommendData.data["playlists"];
       // console.log(homeData);
     });
-
-    // onActivated(() => {
-    //   console.log("onActivated");
-    // });
 
     return {
       ...toRefs(homeData),
@@ -83,17 +86,21 @@ export default defineComponent({
     overflow: hidden;
     li {
       float: left;
-      width: 170px;
-      margin-left: 11px;
-      font-size: 16px;
+      width: 115px;
+      margin-left: 7.5px;
+      font-size: 12px;
+      .iconfont {
+        font-size: 12px;
+      }
       div {
         width: 100%;
-        height: 170px;
+        height: 115px;
         background-color: #888;
         border-radius: 5px;
         position: relative;
         img {
           width: 100%;
+          height: 100%;
         }
         p {
           position: absolute;
@@ -105,6 +112,7 @@ export default defineComponent({
       > p {
         color: #4c4c4c;
         margin: 10px 0;
+        font-size: 12px;
         min-height: 38px;
       }
     }

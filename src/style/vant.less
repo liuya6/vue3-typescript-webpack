@@ -1,0 +1,43 @@
+.van-toast {
+  width: auto;
+  flex-direction: row;
+  max-width: 270px;
+  padding: 14px 16px;
+  height: auto;
+  min-height: 0;
+  justify-content: flex-start;
+  text-align: center;
+
+  &.van-toast--fail {
+    .van-icon-fail {
+      background: #e20b0b;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  }
+
+  &.van-toast--success {
+    .van-icon-success {
+      background: #00a525;
+      font-size: 14px;
+    }
+  }
+
+  .van-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    align-self: flex-start;
+    margin-right: 8px;
+    flex-shrink: 0;
+    text-align: center;
+    line-height: 18px;
+  }
+
+  .van-toast__text {
+    margin-top: 0;
+    flex-grow: 1;
+    white-space: nowrap;
+  }
+}

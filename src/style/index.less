@@ -1,7 +1,4 @@
-a {
-  text-decoration: none;
-  color: inherit;
-}
+@import "vant.less";
 
 @font-face {
   font-family: "iconfont";
@@ -16,4 +13,61 @@ a {
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  font-size: 16px;
+}
+
+a {
+  color: inherit;
+}
+
+[class*="bd"] {
+  position: relative;
+}
+
+[class*="bd"]::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -50%;
+  right: -50%;
+  top: -50%;
+  bottom: -50%;
+  border: 0 solid #e2e2e2;
+  transform: scale(0.5);
+}
+.bd-btm::after {
+  border-bottom-width: 1px;
+}
+
+.bd:after {
+  //background: #000;
+  //transform-origin: left top;
+  //transform: scaleY(0.5);
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }

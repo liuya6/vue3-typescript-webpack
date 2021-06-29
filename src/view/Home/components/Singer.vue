@@ -2,10 +2,16 @@
   <div class="wrapper">
     <div>
       <dl v-for="(item, i) in singerList" :key="item.id">
-        <dt class="title" :type="i">{{ i }}</dt>
-        <dd v-for="child in item">
+        <dt class="title" :type="i">
+          {{ i }}
+        </dt>
+        <dd
+          v-for="child in item"
+          :key="child.id"
+          @click="getSingerMusic(child)"
+        >
           <div>
-            <img v-lazy="child.img1v1Url" alt="" />
+            <img v-lazy="`${child.img1v1Url}?param=80y80`" alt="" />
           </div>
           <p>{{ child.name }}</p>
         </dd>
@@ -14,7 +20,12 @@
   </div>
   <div class="rightNav">
     <ul>
-      <li v-for="(item, i) in singerList" :key="item.id" @click="navScroll(i)">
+      <li
+        v-for="(item, i) in singerList"
+        :class="{ on: titleType === i }"
+        :key="item.id"
+        @click="navScroll(i)"
+      >
         {{ i }}
       </li>
     </ul>
@@ -28,32 +39,38 @@ import {
   reactive,
   toRefs,
   nextTick,
-  ref,
+  onDeactivated,
+  onActivated,
 } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 import numPinyin from "@/utils/pinyin";
-import { singer } from "../type";
-import { homeHttp } from "@/api/index";
+import { homeHttp } from "@/api";
 const pinyin = require("pinyin");
 
 interface SingerList {
-  [key: string]: singer[];
+  [key: string]: Singer[];
 }
 
 export default defineComponent({
   name: "Singer",
 
   setup() {
-    let singerData: { singerList: SingerList | {} } = reactive({
-      singerList: {},
-    });
+    const router = useRouter();
+    const store = useStore();
+    const singerData: { singerList: SingerList | {}; titleType: string } =
+      reactive({
+        singerList: {},
+        titleType: "",
+      });
 
     let scrollArr: { type: string; top: number }[] = [];
 
     onMounted(async () => {
       const res = await homeHttp.getSinger();
-      let artists: singer[] = res.data.artists;
+      let artists: Singer[] = res.data.artists;
       let numPinyinList = Object.keys(numPinyin);
-      artists.map((item: singer) => {
+      artists.map((item: Singer) => {
         let py = pinyin(item.name[0], {
           style: pinyin.STYLE_FIRST_LETTER,
         })[0][0];
@@ -69,16 +86,26 @@ export default defineComponent({
       });
     });
 
-    function setList(list: singer[]): SingerList {
+    onActivated(() => {
+      nextTick(() => {
+        window.addEventListener("scroll", windowScroll);
+      });
+    });
+
+    onDeactivated(() => {
+      window.removeEventListener("scroll", windowScroll);
+    });
+
+    function setList(list: Singer[]): SingerList {
       let obj: SingerList = {};
       let arr: string[] = [];
-      list.forEach((item: singer) => {
+      list.forEach((item: Singer) => {
         arr.indexOf(item.initial) < 0 && arr.push(item.initial);
       });
       arr.sort().forEach((item) => {
         obj[item] = [];
       });
-      list.forEach((item: singer) => {
+      list.forEach((item: Singer) => {
         if (obj.hasOwnProperty(item.initial)) {
           obj[item.initial].push(item);
         }
@@ -101,12 +128,16 @@ export default defineComponent({
         };
         scrollArr.push(scrollTopItem);
       });
+    }
 
-      // scrollToView();
-      // window.addEventListener("scroll", function () {
-      //   console.log(111);
-      // });
-      // window.scrollTo(0, 1000);
+    function windowScroll() {
+      let typeArr: string[] = [];
+      scrollArr.forEach((item) => {
+        if (window.scrollY >= item.top - 1) {
+          typeArr.push(item.type);
+        }
+      });
+      singerData.titleType = typeArr.pop() as string;
     }
 
     function navScroll(type: string) {
@@ -119,9 +150,21 @@ export default defineComponent({
       window.scrollTo(0, top);
     }
 
+    function getSingerMusic(params: Singer) {
+      store.dispatch("Home/setCurrentSingers", params);
+      router.push({
+        name: "musicDetail",
+        query: {
+          id: params.id,
+          type: "singer",
+        },
+      });
+    }
+
     return {
       ...toRefs(singerData),
       navScroll,
+      getSingerMusic,
     };
   },
 });
@@ -129,9 +172,6 @@ export default defineComponent({
 
 <style scoped lang="less">
 .wrapper {
-  height: calc(100vh - 88px);
-  position: relative;
-  z-index: 0;
   dl {
     dt {
       line-height: 20px;
@@ -178,6 +218,9 @@ export default defineComponent({
       line-height: 20px;
       text-align: center;
       font-size: 13px;
+      &.on {
+        color: @theme;
+      }
     }
   }
 }

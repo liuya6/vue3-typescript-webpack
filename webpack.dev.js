@@ -39,6 +39,7 @@ module.exports = merge(WebpackCommon, {
     open: true,
     compress: true, // 启动gzip压缩
     historyApiFallback: true, //vue-router mode:history
+    publicPath: "/",
 
     proxy: {
       "/api": {

@@ -2,8 +2,10 @@
   <div class="homeHeader">
     <div class="top">
       <span class="iconfont">&#xe606;</span>
-      <h1>M U S I C - D E M O</h1>
-      <span class="iconfont">&#xe653;</span>
+      <h1>M U S I C - L Y Q</h1>
+      <span class="iconfont" @click="$router.push({ name: 'musicSearch' })"
+        >&#xe653;</span
+      >
     </div>
     <ul>
       <li v-for="item in tabList" :key="item.path">
@@ -13,7 +15,7 @@
       </li>
     </ul>
   </div>
-  <div class="displace"></div>
+  <div class="placeholder"></div>
 </template>
 
 <script lang="ts">
@@ -95,7 +97,7 @@ export default {
     }
   }
 }
-.displace {
+.placeholder {
   height: 88px;
 }
 </style>

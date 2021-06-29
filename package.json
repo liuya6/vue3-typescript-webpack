@@ -51,13 +51,16 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
+    "@better-scroll/core": "^2.4.1",
     "amfe-flexible": "^2.2.1",
     "axios": "^0.21.1",
     "pinyin": "^2.10.2",
     "reset-css": "^5.0.1",
+    "some-tools-npm": "^0.0.9",
     "vant": "^3.0.16",
     "vue": "^3.0.11",
     "vue-router": "^4.0.8",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.0",
+    "vuex-persistedstate": "^4.0.0-beta.3"
   }
 }

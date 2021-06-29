@@ -21,12 +21,11 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
+    "src/typing/*.ts",
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],
   "exclude": [
     "node_modules",
-    "typings/browser.d.ts",
-    "typings/browser"
   ]
 }

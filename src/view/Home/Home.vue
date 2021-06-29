@@ -19,11 +19,6 @@ export default {
   components: {
     HomeHeader,
   },
-  // data() {
-  //   return {
-  //     tabList,
-  //   };
-  // },
 };
 </script>
 

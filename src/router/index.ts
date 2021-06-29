@@ -8,6 +8,7 @@ const router = createRouter({
       component: () => import("../view/Home/Home.vue"),
       meta: {
         zIndex: 1,
+        keepAlive: true,
       },
       children: [
         {
@@ -35,6 +36,16 @@ const router = createRouter({
           },
         },
       ],
+    },
+    {
+      path: "/detail",
+      name: "musicDetail",
+      component: () => import("../view/MusicDetail/MusicDetail.vue"),
+    },
+    {
+      path: "/search",
+      name: "musicSearch",
+      component: () => import("../view/MusicSearch/MusicSearch.vue"),
     },
     // {
     //   path: "/",

@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { Toast } from "vant";
 
 const CancelToken = axios.CancelToken;
 let cancel = new Map();
@@ -11,6 +12,13 @@ const instance = axios.create({
 instance.interceptors.request.use(
   function (config) {
     // 在发送请求之前做些什么
+    if (config.headers.loading) {
+      Toast.loading({
+        message: "加载中...",
+        forbidClick: true,
+      });
+    }
+
     new CancelToken(function executor(c) {
       // executor 函数接收一个 cancel 函数作为参数
       cancel.get(c);
@@ -30,10 +38,12 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   function (response) {
     // 对响应数据做点什么
+    Toast.clear();
     return response;
   },
   function (error) {
     // 对响应错误做点什么
+    Toast.fail("服务器匆忙，请稍后重试...");
     return Promise.reject(error);
   }
 );
@@ -59,6 +69,7 @@ export function http(config: AxiosRequestConfig) {
     headers: {
       // 被发送的自定义请求头
       accept: "application/json",
+      ...config.headers,
     },
   }).catch((error) => {
     return error.message;

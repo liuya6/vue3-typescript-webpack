@@ -3,7 +3,18 @@
     <dt>
       <img :src="item.coverImgUrl" alt="" />
     </dt>
-    <dd v-for="(child, i) in item.tracks">
+    <dd
+      v-for="(child, i) in item.tracks"
+      :key="item.id"
+      @click="
+        $router.push({
+          name: 'musicDetail',
+          query: {
+            id: item.id,
+          },
+        })
+      "
+    >
       {{ `${i + 1}. ${child.first}-${child.second}` }}
     </dd>
   </dl>
@@ -11,7 +22,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive, toRefs } from "vue";
-import { homeHttp } from "@/api/index";
+import { homeHttp } from "@/api";
 
 export default defineComponent({
   name: "Ranking",
@@ -25,7 +36,6 @@ export default defineComponent({
       rankData.list = res.data.list.filter(
         (item: { tracks: string | any[] }) => item.tracks.length
       );
-      console.log(rankData.list);
     });
 
     return {

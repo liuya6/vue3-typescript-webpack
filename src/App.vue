@@ -1,19 +1,23 @@
 <template>
   <router-view v-slot="{ Component, route }">
-    <keep-alive v-if="route.meta.keepAlive">
-      <component :is="Component" />
+    <keep-alive>
+      <component :is="Component" v-if="route.meta.keepAlive" />
     </keep-alive>
-    <component :is="Component" v-else />
+    <component v-if="!route.meta.keepAlive" :is="Component" />
   </router-view>
+  <PlayMusic />
 </template>
 
 <script lang="ts">
 import { defineComponent, getCurrentInstance } from "vue";
+import PlayMusic from "./view/PlayMusic/PlayMusic.vue";
 // import { useStore, mapState } from "vuex";
 // import { getHome } from "@/api/modules/home";
 
 export default defineComponent({
-  components: {},
+  components: {
+    PlayMusic,
+  },
 
   computed: {
     // ...mapState({
@@ -23,19 +27,6 @@ export default defineComponent({
 
   setup() {
     // const el = getCurrentInstance();
-    // console.log(el);
-    // const store = useStore();
-    // console.log(store.state.Home.message);
-    // console.log(this.message);
-    // store
-    // const params = {
-    //   offset: 0,
-    //   limit: 5,
-    // };
-    // getHome(params).then((res) => {
-    //   console.log(res);
-    // });
-    // console.log(getHome);
   },
 });
 </script>
