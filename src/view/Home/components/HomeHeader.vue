@@ -1,12 +1,15 @@
 <template>
   <div class="homeHeader">
-    <div class="top">
-      <span class="iconfont">&#xe606;</span>
-      <h1>M U S I C - L Y Q</h1>
-      <span class="iconfont" @click="$router.push({ name: 'musicSearch' })"
-        >&#xe653;</span
-      >
-    </div>
+    <Header :title="'M U S I C - L Y Q'">
+      <template v-slot:left>
+        <span class="iconfont" @click="sidebar.show()">&#xe606;</span>
+      </template>
+      <template v-slot:right>
+        <span class="iconfont" @click="$router.push({ name: 'musicSearch' })"
+          >&#xe653;</span
+        >
+      </template>
+    </Header>
     <ul>
       <li v-for="item in tabList" :key="item.path">
         <router-link :to="item.path" exact-active-class="active">{{
@@ -16,9 +19,14 @@
     </ul>
   </div>
   <div class="placeholder"></div>
+  <Sidebar ref="sidebar" />
 </template>
 
 <script lang="ts">
+import { defineComponent, ref } from "vue";
+
+import Sidebar from "./Sidebar.vue";
+
 const tabList = [
   {
     path: "/",
@@ -33,14 +41,22 @@ const tabList = [
     title: "歌手",
   },
 ];
-export default {
+export default defineComponent({
   name: "HomeHeader",
+
+  components: {
+    Sidebar,
+  },
+
   setup() {
+    const sidebar = ref(null);
+
     return {
       tabList,
+      sidebar,
     };
   },
-};
+});
 </script>
 
 <style scoped lang="less">

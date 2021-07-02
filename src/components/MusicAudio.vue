@@ -29,11 +29,19 @@ export default defineComponent({
     });
 
     const musicUrl = computed(() => {
+      // console.log(
+      //   store.state.PlayMusic.currentMusicUrl,
+      //   "store.state.PlayMusic.currentMusicUrl"
+      // );
       const id =
         store.state.PlayMusic.currentMusic &&
         store.state.PlayMusic.currentMusic.id;
       return `https://music.163.com/song/media/outer/url?id=${id}`;
-      // return store.state.PlayMusic.currentMusicUrl.url;
+      // return (
+      //   (store.state.PlayMusic.currentMusicUrl &&
+      //     store.state.PlayMusic.currentMusicUrl.url) ||
+      //   ""
+      // );
     });
 
     const currentMusicChange = () => {

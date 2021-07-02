@@ -1,12 +1,26 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, CancelTokenSource } from "axios";
 import { Toast } from "vant";
-
-const CancelToken = axios.CancelToken;
-let cancel = new Map();
 
 const instance = axios.create({
   timeout: 10000,
 });
+const CancelTokenSourceMap = new Map();
+
+export const httpCancel = {
+  abort(url: string) {
+    const source: CancelTokenSource | null = CancelTokenSourceMap.get(url);
+    if (source) {
+      source.cancel();
+      CancelTokenSourceMap.delete(url);
+    }
+  },
+  abortAll() {
+    CancelTokenSourceMap.forEach((source: CancelTokenSource) => {
+      source.cancel();
+    });
+    CancelTokenSourceMap.clear();
+  },
+};
 
 // 添加请求拦截器
 instance.interceptors.request.use(
@@ -19,10 +33,9 @@ instance.interceptors.request.use(
       });
     }
 
-    new CancelToken(function executor(c) {
-      // executor 函数接收一个 cancel 函数作为参数
-      cancel.get(c);
-    });
+    const source = axios.CancelToken.source();
+    config.cancelToken = source.token;
+    CancelTokenSourceMap.set(config.url, source);
 
     // console.log(cancel, "cancel");
 
@@ -37,13 +50,29 @@ instance.interceptors.request.use(
 // 添加响应拦截器
 instance.interceptors.response.use(
   function (response) {
+    // 删除cancel token
+    CancelTokenSourceMap.delete(response.config.url);
     // 对响应数据做点什么
     Toast.clear();
+
     return response;
   },
   function (error) {
     // 对响应错误做点什么
-    Toast.fail("服务器匆忙，请稍后重试...");
+    console.log(error.response);
+    if (error.response) {
+      if (error.response.status === 504) {
+        return Toast.fail("服务器开小差了，请稍后重试...");
+      }
+      Toast.fail(error.response.data.message);
+    }
+    // 删除cancel token
+    const url = error.config.url;
+    console.log(url, "error-url");
+    if (url) {
+      CancelTokenSourceMap.delete(error.config.url);
+    }
+
     return Promise.reject(error);
   }
 );
@@ -72,6 +101,6 @@ export function http(config: AxiosRequestConfig) {
       ...config.headers,
     },
   }).catch((error) => {
-    return error.message;
+    return error;
   });
 }

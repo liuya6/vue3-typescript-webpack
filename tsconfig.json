@@ -21,7 +21,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "src/typing/*.ts",
+    "src/typings/*.ts",
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],

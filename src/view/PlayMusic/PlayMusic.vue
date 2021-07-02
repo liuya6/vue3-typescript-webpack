@@ -49,6 +49,7 @@ import { defineComponent, computed, watchEffect, ref, watch } from "vue";
 import { useStore } from "vuex";
 
 import { musicPlayHttp } from "@/api";
+import { httpCancel } from "@/api/axios";
 import Lyric from "@/utils/lyric";
 
 import Song from "./components/Song.vue";
@@ -86,8 +87,11 @@ export default defineComponent({
     });
 
     const getMusic = async (id: number) => {
+      httpCancel.abort("api/song/url");
+      httpCancel.abort("api/lyric");
       const musicUrlRes = await musicPlayHttp.getMusicUrl({ id });
       const musicLyricRes = await musicPlayHttp.getMusicLyric({ id });
+      console.log(musicUrlRes, "musicUrlRes");
       store.commit("PlayMusic/setCurrentMusicUrl", musicUrlRes.data.data[0]);
       try {
         if (store.state.PlayMusic.NoLyric) {
@@ -102,10 +106,13 @@ export default defineComponent({
       }
     };
 
-    watchEffect(() => {
-      const id = store.getters["PlayMusic/currentMusicId"];
-      if (id) {
-        getMusic(id);
+    const currentMusicId = computed(() => {
+      return store.getters["PlayMusic/currentMusicId"];
+    });
+
+    watch(currentMusicId, () => {
+      if (currentMusicId) {
+        getMusic(currentMusicId.value);
       }
     });
 

@@ -1,5 +1,7 @@
 import store from "@/store";
 import { deepClone } from "@/utils/tools";
+import { isLogin } from "@/utils/user";
+import MusicDetail from "@/view/MusicDetail/MusicDetail.vue";
 
 const playMusic = (item: MusicDetail) => {
   store.dispatch("PlayMusic/setCurrentMusics", item);

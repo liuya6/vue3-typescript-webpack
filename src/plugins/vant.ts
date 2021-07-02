@@ -8,6 +8,11 @@ import {
   Popup,
   PullRefresh,
   List,
+  Tab,
+  Tabs,
+  Field,
+  Form,
+  Button,
 } from "vant";
 import { App } from "vue";
 
@@ -21,5 +26,10 @@ export function useVant(app: App) {
     .use(Circle)
     .use(Popup)
     .use(PullRefresh)
-    .use(List);
+    .use(List)
+    .use(Tabs)
+    .use(Tab)
+    .use(Field)
+    .use(Form)
+    .use(Button);
 }

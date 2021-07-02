@@ -19,10 +19,13 @@ export function getMusicDetail(params: { ids: string }) {
     method: "get",
     url: "api/song/detail",
     params,
+    headers: {
+      loading: true,
+    },
   });
 }
 
-// 获取歌手全部音乐
+// 获取歌手前50首热门音乐
 export function getSingerPlayListDetail(params: {
   id: string | RouteParamValue[];
 }) {

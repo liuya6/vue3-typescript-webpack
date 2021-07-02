@@ -10,9 +10,9 @@
 
 <script lang="ts">
 import { defineComponent, getCurrentInstance } from "vue";
+import { useStore } from "vuex";
+
 import PlayMusic from "./view/PlayMusic/PlayMusic.vue";
-// import { useStore, mapState } from "vuex";
-// import { getHome } from "@/api/modules/home";
 
 export default defineComponent({
   components: {
@@ -26,6 +26,8 @@ export default defineComponent({
   },
 
   setup() {
+    const store = useStore();
+    store.dispatch("User/checkLoginStatus");
     // const el = getCurrentInstance();
   },
 });

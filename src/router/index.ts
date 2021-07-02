@@ -47,10 +47,16 @@ const router = createRouter({
       name: "musicSearch",
       component: () => import("../view/MusicSearch/MusicSearch.vue"),
     },
-    // {
-    //   path: "/",
-    //   redirect: "/home",
-    // },
+    {
+      path: "/login",
+      name: "login",
+      component: () => import("../view/User/Login.vue"),
+    },
+    {
+      path: "/list",
+      name: "playList",
+      component: () => import("../view/User/UserPlayList.vue"),
+    },
   ],
 });
 

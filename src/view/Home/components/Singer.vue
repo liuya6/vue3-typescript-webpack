@@ -18,7 +18,7 @@
       </dl>
     </div>
   </div>
-  <div class="rightNav">
+  <div class="rightNav" @click.stop>
     <ul>
       <li
         v-for="(item, i) in singerList"
@@ -213,6 +213,7 @@ export default defineComponent({
   right: 5px;
   top: 50%;
   transform: translate(0, -45%);
+  z-index: 1;
   ul {
     li {
       line-height: 20px;

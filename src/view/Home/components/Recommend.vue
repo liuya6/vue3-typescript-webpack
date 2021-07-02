@@ -2,7 +2,7 @@
   <div class="banner">
     <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
       <van-swipe-item v-for="item in banners">
-        <img :src="item.pic" alt="" />
+        <img :src="`${item.pic}?param=357y150`" alt="" />
       </van-swipe-item>
     </van-swipe>
   </div>

@@ -40,21 +40,10 @@
         >（共{{ isSinger ? songs.length : playlist.tracks.length }}首）</span
       >
     </div>
-    <ul>
-      <li
-        v-for="(item, i) in isSinger ? songs : playlist.tracks"
-        :key="item.id"
-        @click="playMusics(item)"
-      >
-        <span>
-          {{ i + 1 }}
-        </span>
-        <div>
-          <p>{{ item.name }}</p>
-          <p>{{ getSingerName(item.ar) }}</p>
-        </div>
-      </li>
-    </ul>
+    <MusicList
+      :musicList="isSinger ? songs : playlist.tracks"
+      :showPlay="true"
+    />
   </div>
 </template>
 
@@ -72,9 +61,8 @@ import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { musicDetailHttp } from "@/api";
 import { filterCount } from "@/utils/filter";
-import observer from "@/plugins/bus";
 
-import { playMusics } from "@/utils/player";
+import observer from "@/plugins/bus";
 
 export default defineComponent({
   name: "MusicDetail",
@@ -98,6 +86,12 @@ export default defineComponent({
     });
 
     onMounted(async () => {
+      await getList();
+
+      window.addEventListener("scroll", scroll);
+    });
+
+    const getList = async () => {
       let id = route.query.id as string;
       let getMusicList = isSinger.value
         ? musicDetailHttp.getSingerPlayListDetail
@@ -108,11 +102,18 @@ export default defineComponent({
       if (isSinger.value) {
         musicDetailData.songs = result.data.songs;
       } else {
-        musicDetailData.playlist = result.data.playlist;
+        let playlist = result.data.playlist;
+        const trackIds = playlist.trackIds as any[];
+        const tracksLength = playlist.tracks.length;
+        const trackIdsLength = trackIds.length;
+        if (trackIdsLength > tracksLength) {
+          const ids = trackIds.map((item: any) => item.id).join(",");
+          const res = await musicDetailHttp.getMusicDetail({ ids });
+          playlist.tracks = res.data.songs;
+        }
+        musicDetailData.playlist = playlist;
       }
-
-      window.addEventListener("scroll", scroll);
-    });
+    };
 
     onUnmounted(() => {
       window.removeEventListener("scroll", scroll);
@@ -147,7 +148,6 @@ export default defineComponent({
       getSingerName,
       singerDetail,
       isSinger,
-      playMusics,
       playAll,
       topEl,
       topFixedFlag,
@@ -206,7 +206,6 @@ export default defineComponent({
   position: relative;
   top: -10px;
   margin-bottom: -10px;
-  //padding-left: 10px;
   .contentTop {
     line-height: 44px;
     color: #363838;
@@ -221,35 +220,6 @@ export default defineComponent({
     span {
       &:last-child {
         color: #7a7b7a;
-      }
-    }
-  }
-  ul {
-    li {
-      height: 60px;
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #e3e3e3;
-      padding-left: 10px;
-      &:last-child {
-        border-bottom: none;
-      }
-      span {
-        width: 30px;
-      }
-      p {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: calc(100vw - 10px - 30px);
-        &:first-child {
-          font-size: 18px;
-          color: #2d2f2d;
-        }
-        &:last-child {
-          margin-top: 5px;
-          color: #7a7b7a;
-        }
       }
     }
   }

@@ -29,7 +29,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, reactive, toRefs } from "vue";
 
-import { musicSearch } from "@/api";
+import { musicSearchHttp } from "@/api";
 import { deepClone } from "@/utils/tools";
 import observer from "@/plugins/bus";
 
@@ -47,7 +47,7 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      const result = await musicSearch.searchHot();
+      const result = await musicSearchHttp.searchHot();
       state.searchHot = result.data.result.hots;
       if (window.localStorage.getItem("history")) {
         state.history = JSON.parse(

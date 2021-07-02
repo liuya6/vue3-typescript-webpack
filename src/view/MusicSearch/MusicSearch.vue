@@ -34,25 +34,7 @@
       :limit="limit"
       ref="scroll"
     >
-      <ul class="musicList">
-        <li
-          v-for="(item, i) in musicList"
-          :key="item.id"
-          @click="playMusics(item)"
-        >
-          <span>
-            {{ i + 1 }}
-          </span>
-          <div>
-            <p>{{ item.name }}</p>
-            <p>
-              <span v-for="(child, j) in item.ar" :key="j">{{
-                child.name
-              }}</span>
-            </p>
-          </div>
-        </li>
-      </ul>
+      <MusicList :musicList="musicList"></MusicList>
     </Scroll>
     <SearchKey
       v-show="!musicList.length"
@@ -83,7 +65,7 @@ import {
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
-import { musicSearch } from "@/api";
+import { musicSearchHttp } from "@/api";
 import { throttle } from "@/utils/tools";
 import { playMusics } from "@/utils/player";
 import observer from "@/plugins/bus";
@@ -136,7 +118,7 @@ export default defineComponent({
     const getSearchSuggest = (function () {
       const fn = async () => {
         if (!searchValue.value || state.notRequestSuggest) return;
-        const result = await musicSearch.searchSuggest({
+        const result = await musicSearchHttp.searchSuggest({
           keywords: searchValue.value,
         });
         state.suggestList.songs = result.data.result.songs || [];
@@ -163,7 +145,7 @@ export default defineComponent({
         offset: state.offset,
         keywords: state.oldSearch,
       };
-      const result = await musicSearch.searchMusic(params);
+      const result = await musicSearchHttp.searchMusic(params);
       const songs = result.data.result.songs;
       state.notRequestSuggest = false;
       state.musicList = state.musicList.concat(songs);

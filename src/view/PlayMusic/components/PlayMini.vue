@@ -34,7 +34,7 @@
           >
         </div>
       </div>
-      <div class="placeholder"></div>
+      <div class="placeholder" @click.stop></div>
     </div>
   </transition>
   <van-popup v-model:show="musicListShow" position="bottom">
@@ -163,8 +163,7 @@ export default defineComponent({
     height: 70px;
     left: 0;
     bottom: 0;
-    opacity: 0.8;
-    background: #fff;
+    background-color: rgba(255, 255, 255, 0.9);
     display: flex;
     align-items: center;
     .imgBox {
@@ -231,7 +230,7 @@ export default defineComponent({
     }
   }
   .placeholder {
-    height: 80px;
+    height: 70px;
   }
 }
 .musicList {
