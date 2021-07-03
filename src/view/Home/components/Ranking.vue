@@ -1,20 +1,23 @@
 <template>
-  <dl v-for="item in list" :key="item.id">
+  <dl
+    v-for="item in list"
+    :key="item.id"
+    :class="{
+      notTrack: !item.tracks.length,
+    }"
+    @click="
+      $router.push({
+        name: 'musicDetail',
+        query: {
+          id: item.id,
+        },
+      })
+    "
+  >
     <dt>
-      <img :src="item.coverImgUrl" alt="" />
+      <img :src="`${item.coverImgUrl}?param=100y100`" alt="" />
     </dt>
-    <dd
-      v-for="(child, i) in item.tracks"
-      :key="item.id"
-      @click="
-        $router.push({
-          name: 'musicDetail',
-          query: {
-            id: item.id,
-          },
-        })
-      "
-    >
+    <dd v-for="(child, i) in item.tracks" :key="child.id">
       {{ `${i + 1}. ${child.first}-${child.second}` }}
     </dd>
   </dl>
@@ -33,9 +36,7 @@ export default defineComponent({
 
     onMounted(async () => {
       const res = await homeHttp.getRanking();
-      rankData.list = res.data.list.filter(
-        (item: { tracks: string | any[] }) => item.tracks.length
-      );
+      rankData.list = res.data.list;
     });
 
     return {
@@ -52,6 +53,13 @@ dl {
   overflow: hidden;
   border-bottom: 1px solid #e1e2e2;
   font-size: 20px;
+  &.notTrack {
+    float: left;
+    margin: 0 12px;
+    > dt {
+      margin: 0;
+    }
+  }
   &:last-child {
     border-bottom: none;
   }

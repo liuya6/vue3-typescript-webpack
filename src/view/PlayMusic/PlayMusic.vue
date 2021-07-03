@@ -91,7 +91,7 @@ export default defineComponent({
       httpCancel.abort("api/lyric");
       const musicUrlRes = await musicPlayHttp.getMusicUrl({ id });
       const musicLyricRes = await musicPlayHttp.getMusicLyric({ id });
-      console.log(musicUrlRes, "musicUrlRes");
+      // console.log(musicUrlRes, "musicUrlRes");
       store.commit("PlayMusic/setCurrentMusicUrl", musicUrlRes.data.data[0]);
       try {
         if (store.state.PlayMusic.NoLyric) {

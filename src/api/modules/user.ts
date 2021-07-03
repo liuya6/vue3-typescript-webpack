@@ -70,3 +70,46 @@ export function userPlaylist(data: { uid: number }) {
     },
   });
 }
+
+// 音乐喜欢
+export function userMusicLike(params: { id: number; like: boolean }) {
+  return http({
+    method: "get",
+    url: "api/like",
+    params: {
+      timerstamp: Date.now(),
+      ...params,
+    },
+    headers: {
+      loading: true,
+    },
+  });
+}
+
+// 对歌单添加或删除歌曲 op pid歌单id tracks 歌曲id可用逗号分开
+export function playlistTracks(data: {
+  op: "add" | "del";
+  pid: number;
+  tracks: string;
+}) {
+  return http({
+    method: "post",
+    url: "api/playlist/tracks",
+    data: {
+      timerstamp: Date.now(),
+      ...data,
+    },
+  });
+}
+
+// 音乐喜欢列表
+export function userMusicLikeList(data: { uid: number }) {
+  return http({
+    method: "post",
+    url: "api/likelist",
+    params: {
+      timerstamp: Date.now(),
+      ...data,
+    },
+  });
+}

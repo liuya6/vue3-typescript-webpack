@@ -24,7 +24,9 @@
         songStatus ? "&#xe60f;" : "&#xe6ca;"
       }}</span>
       <span class="iconfont" @click="addMusic">&#xe7a5;</span>
-      <span class="iconfont">&#xe79e;</span>
+      <span class="iconfont" @click="like" :class="isLike() && 'like'">{{
+        isLike() ? "&#xe622;" : "&#xe79e;"
+      }}</span>
     </p>
     <MusicAudio
       @currentTimeChange="currentTimeChanges"
@@ -40,9 +42,12 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 import MusicAudio from "@/components/MusicAudio.vue";
 import { addMusic, reduceMusic } from "@/utils/player";
+import { isLogin, isLike } from "@/utils/user";
+import { Toast } from "vant";
 
 export default defineComponent({
   name: "Song",
@@ -52,6 +57,8 @@ export default defineComponent({
 
   setup() {
     const store = useStore();
+
+    const router = useRouter();
 
     const duration = ref(0);
     const currentTime = ref(0);
@@ -128,6 +135,15 @@ export default defineComponent({
       });
     };
 
+    const like = () => {
+      if (!isLogin()) {
+        store.commit("PlayMusic/setPlayShow", false);
+        Toast("请先登录~");
+        return router.push({ name: "login" });
+      }
+      store.dispatch("User/setUserMusicLike");
+    };
+
     return {
       duration,
       currentTime,
@@ -146,6 +162,8 @@ export default defineComponent({
       musicEnds,
       addMusic,
       reduceMusic,
+      like,
+      isLike,
     };
   },
 });
@@ -205,6 +223,9 @@ export default defineComponent({
     .iconfont {
       font-size: 30px;
       color: #fff;
+      &.like {
+        color: @theme;
+      }
       &.play {
         font-size: 50px;
       }

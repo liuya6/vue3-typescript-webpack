@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <HomeHeader />
-    <div class="homeContent">
+    <div class="homeContent cl">
       <router-view v-slot:="{ Component }">
         <keep-alive>
           <component :is="Component"></component>

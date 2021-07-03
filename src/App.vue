@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, getCurrentInstance } from "vue";
+import { computed, defineComponent, watch } from "vue";
 import { useStore } from "vuex";
 
 import PlayMusic from "./view/PlayMusic/PlayMusic.vue";
@@ -19,16 +19,24 @@ export default defineComponent({
     PlayMusic,
   },
 
-  computed: {
-    // ...mapState({
-    // message: (state) => state.Home.message,
-    // }),
-  },
-
   setup() {
     const store = useStore();
     store.dispatch("User/checkLoginStatus");
-    // const el = getCurrentInstance();
+
+    const userInfo = computed(() => {
+      return store.state.User.userInfo;
+    });
+
+    watch(
+      userInfo,
+      () => {
+        if (userInfo.value.userId) {
+          store.dispatch("User/getUserLikeMusicList");
+          // store.dispatch("User/getUserPlayList");
+        }
+      },
+      { deep: true }
+    );
   },
 });
 </script>

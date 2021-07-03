@@ -6,14 +6,17 @@ export function getPlayListDetail(params: { id: string | RouteParamValue[] }) {
   return http({
     method: "get",
     url: "api/playlist/detail",
-    params,
+    params: {
+      timerstamp: Date.now(),
+      ...params,
+    },
     headers: {
       loading: true,
     },
   });
 }
 
-// 获取歌曲详情 /song/detail ids=1,2
+// 获取歌曲详情 // ids=1,2
 export function getMusicDetail(params: { ids: string }) {
   return http({
     method: "get",

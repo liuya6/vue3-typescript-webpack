@@ -93,9 +93,11 @@ export default defineComponent({
   ul {
     height: calc(100vh - 60px - 150px);
     overflow: auto;
+    padding: 0 10px;
     li {
       text-align: center;
-      height: 50px;
+      height: 60px;
+      line-height: 20px;
       color: #bbb;
       margin-bottom: 10px;
       &.active {

@@ -138,7 +138,6 @@ const PlayMusic: Module<ModuleState, RootState> = {
         playIndex =
           payload.musicChange === "add" ? playIndex + 1 : playIndex - 1;
       }
-      console.log(playIndex, "playIndex");
       commit("setPlayListIndex", playIndex);
     },
   },

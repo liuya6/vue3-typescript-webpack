@@ -31,18 +31,8 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  reactive,
-  toRefs,
-  nextTick,
-  ref,
-} from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useStore } from "vuex";
-
-import { userHttp } from "@/api";
 
 export default defineComponent({
   name: "UserPlayList",
@@ -51,27 +41,15 @@ export default defineComponent({
     const store = useStore();
     const scroll = ref(null);
 
-    const state = reactive({
-      // limit: 30,
-      // offset: -30,
-      playlist: [],
+    const playlist = computed(() => {
+      return store.state.User.userPlaylist;
     });
 
     const userName = computed(() => {
       return store.state.User.userInfo.nickname;
     });
 
-    const getPlayList = async () => {
-      const params = {
-        uid: store.state.User.userInfo.userId,
-        // limit: state.limit,
-        // offset: state.offset,
-      };
-      const result = await userHttp.userPlaylist(params);
-      state.playlist = state.playlist.concat(result.data.playlist);
-      return result.data.playlist;
-    };
-    getPlayList();
+    store.dispatch("User/getUserPlayList");
 
     // const reset = () => {
     //   state.offset = -30;
@@ -96,7 +74,7 @@ export default defineComponent({
     return {
       // refresh,
       // load,
-      ...toRefs(state),
+      playlist,
       userName,
       scroll,
     };

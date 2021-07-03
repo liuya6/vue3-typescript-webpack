@@ -17,6 +17,7 @@ import { defineComponent, computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 
 import observer from "@/plugins/bus";
+import { isLogin } from "@/utils/user";
 
 export default defineComponent({
   name: "MusicAudio",
@@ -29,19 +30,29 @@ export default defineComponent({
     });
 
     const musicUrl = computed(() => {
-      // console.log(
-      //   store.state.PlayMusic.currentMusicUrl,
-      //   "store.state.PlayMusic.currentMusicUrl"
-      // );
-      const id =
-        store.state.PlayMusic.currentMusic &&
-        store.state.PlayMusic.currentMusic.id;
-      return `https://music.163.com/song/media/outer/url?id=${id}`;
-      // return (
-      //   (store.state.PlayMusic.currentMusicUrl &&
-      //     store.state.PlayMusic.currentMusicUrl.url) ||
-      //   ""
-      // );
+      if (isLogin()) {
+        return (
+          (store.state.PlayMusic.currentMusicUrl &&
+            store.state.PlayMusic.currentMusicUrl.url) ||
+          null
+        );
+      } else {
+        const id =
+          store.state.PlayMusic.currentMusic &&
+          store.state.PlayMusic.currentMusic.id;
+        return `https://music.163.com/song/media/outer/url?id=${id}`;
+      }
+    });
+
+    watch(musicUrl, () => {
+      if (!musicUrl.value) {
+        const playList = store.state.PlayMusic.playList;
+        if (!playList.length) return;
+        store.dispatch("PlayMusic/setPlayListIndexS", {
+          musicChange: "add",
+          source: "auto",
+        });
+      }
     });
 
     const currentMusicChange = () => {
