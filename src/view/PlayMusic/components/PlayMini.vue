@@ -207,7 +207,7 @@ export default defineComponent({
     .list {
       display: flex;
       align-items: center;
-      /deep/ .van-circle {
+      :deep(.van-circle) {
         width: 35px;
         height: 35px;
         .van-circle__hover {

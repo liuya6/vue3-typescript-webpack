@@ -187,7 +187,7 @@ export default defineComponent({
       width: 30px;
       text-align: center;
     }
-    /deep/ .van-slider {
+    :deep(.van-slider) {
       width: 260px;
       margin: 0 15px;
       .van-slider__bar {

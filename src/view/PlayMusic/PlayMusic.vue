@@ -82,7 +82,7 @@ export default defineComponent({
       // console.log(currentMusic, "currentMusic");
       return (
         currentMusic.value &&
-        currentMusic.value.ar.map((item) => item.name).toString()
+        currentMusic.value.ar.map((item: any) => item.name).toString()
       );
     });
 
