@@ -69,7 +69,7 @@ export default defineComponent({
   background-color: @theme;
   color: #fff;
   font-size: 15px;
-  z-index: 99;
+  z-index: 90;
   .top {
     height: 44px;
     display: flex;

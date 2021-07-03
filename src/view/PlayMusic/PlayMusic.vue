@@ -147,7 +147,7 @@ export default defineComponent({
   right: 0;
   top: 0;
   bottom: 0;
-  z-index: 999;
+  z-index: 99;
   background-color: #f2f3f4;
   .background {
     position: absolute;
