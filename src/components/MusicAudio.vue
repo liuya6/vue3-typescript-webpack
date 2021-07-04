@@ -44,16 +44,16 @@ export default defineComponent({
       }
     });
 
-    watch(musicUrl, () => {
-      if (!musicUrl.value) {
-        const playList = store.state.PlayMusic.playList;
-        if (!playList.length) return;
-        store.dispatch("PlayMusic/setPlayListIndexS", {
-          musicChange: "add",
-          source: "auto",
-        });
-      }
-    });
+    // watch(musicUrl, () => {
+    //   if (!musicUrl.value) {
+    //     const playList = store.state.PlayMusic.playList;
+    //     if (!playList.length) return;
+    //     store.dispatch("PlayMusic/setPlayListIndexS", {
+    //       musicChange: "add",
+    //       source: "auto",
+    //     });
+    //   }
+    // });
 
     const currentMusicChange = () => {
       const currentMusic = store.state.PlayMusic.playList[playListIndex.value];

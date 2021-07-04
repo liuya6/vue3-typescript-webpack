@@ -16,9 +16,9 @@ export function getMusicRecommend() {
   return http({
     method: "get",
     url: "api/top/playlist/highquality",
-    headers: {
-      loading: true,
-    },
+    // headers: {
+    //   loading: true,
+    // },
   });
 }
 

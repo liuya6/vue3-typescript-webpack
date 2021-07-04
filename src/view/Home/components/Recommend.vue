@@ -1,6 +1,11 @@
 <template>
   <div class="banner">
-    <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+    <van-swipe
+      class="my-swipe"
+      :autoplay="3000"
+      indicator-color="white"
+      lazy-render
+    >
       <van-swipe-item v-for="item in banners">
         <img :src="`${item.pic}?param=357y150`" alt="" />
       </van-swipe-item>
@@ -22,7 +27,7 @@
         "
       >
         <div>
-          <img v-lazy="`${item.coverImgUrl}?param=200y200`" alt="" />
+          <img v-lazy="`${item.coverImgUrl}?param=115y115`" alt="" />
           <p>
             <span class="iconfont">&#xe619;</span
             >{{ filterCount(item.playCount) }}
@@ -45,12 +50,13 @@ export default defineComponent({
       playlists: [],
     });
 
-    onMounted(async () => {
-      const res = await homeHttp.getHomePage();
-      const recommendData = await homeHttp.getMusicRecommend();
-      homeData.banners = res.data.data["blocks"][0]["extInfo"]["banners"];
-      homeData.playlists = recommendData.data["playlists"];
-      // console.log(homeData);
+    onMounted(() => {
+      homeHttp.getHomePage().then((res) => {
+        homeData.banners = res.data.data["blocks"][0]["extInfo"]["banners"];
+      });
+      homeHttp.getMusicRecommend().then((recommendData) => {
+        homeData.playlists = recommendData.data["playlists"];
+      });
     });
 
     return {
@@ -63,7 +69,7 @@ export default defineComponent({
 
 <style scoped lang="less">
 .banner {
-  background-image: linear-gradient(#c44f41 85%, transparent 0%);
+  background-image: linear-gradient(@theme 85%, transparent 0%);
   display: flex;
   justify-content: center;
   .van-swipe {

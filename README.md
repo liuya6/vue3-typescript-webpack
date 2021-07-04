@@ -12,3 +12,7 @@
 
 ###### 接口使用
 https://github.com/Binaryify/NeteaseCloudMusicApi
+
+###### 线上地址
+
+https://vue3-typescript-webpack.vercel.app/

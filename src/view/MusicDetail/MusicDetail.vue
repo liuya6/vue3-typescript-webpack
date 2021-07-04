@@ -14,7 +14,7 @@
     <img
       v-lazy="
         isSinger
-          ? singerDetail && `${singerDetail.img1v1Url}?param=300y300`
+          ? singerDetail && `${singerDetail.img1v1Url}?param=375y300`
           : playlist.coverImgUrl
       "
       alt=""
@@ -108,8 +108,9 @@ export default defineComponent({
         const trackIdsLength = trackIds.length;
         if (trackIdsLength > tracksLength) {
           const ids = trackIds.map((item: any) => item.id).join(",");
-          const res = await musicDetailHttp.getMusicDetail({ ids });
-          playlist.tracks = res.data.songs;
+          musicDetailHttp.getMusicDetail({ ids }).then((res) => {
+            playlist.tracks = res.data.songs;
+          });
         }
         musicDetailData.playlist = playlist;
       }

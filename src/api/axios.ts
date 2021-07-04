@@ -2,7 +2,8 @@ import axios, { AxiosRequestConfig, CancelTokenSource } from "axios";
 import { Toast } from "vant";
 
 const instance = axios.create({
-  timeout: 10000,
+  timeout: 20000,
+  // withCredentials: true,
 });
 const CancelTokenSourceMap = new Map();
 

@@ -51,6 +51,7 @@ import { useStore } from "vuex";
 import { musicPlayHttp } from "@/api";
 import { httpCancel } from "@/api/axios";
 import Lyric from "@/utils/lyric";
+import { isLogin } from "@/utils/user";
 
 import Song from "./components/Song.vue";
 import PlayMini from "./components/PlayMini.vue";
@@ -87,23 +88,25 @@ export default defineComponent({
     });
 
     const getMusic = async (id: number) => {
-      httpCancel.abort("api/song/url");
-      httpCancel.abort("api/lyric");
-      const musicUrlRes = await musicPlayHttp.getMusicUrl({ id });
-      const musicLyricRes = await musicPlayHttp.getMusicLyric({ id });
-      // console.log(musicUrlRes, "musicUrlRes");
-      store.commit("PlayMusic/setCurrentMusicUrl", musicUrlRes.data.data[0]);
-      try {
-        if (store.state.PlayMusic.NoLyric) {
-          store.commit("PlayMusic/setNoLyric", false);
-        }
-        const ly: {
-          lines: { time: number; txt: string }[];
-        } = new Lyric(musicLyricRes.data.lrc.lyric);
-        store.commit("PlayMusic/setCurrentMusicLyric", ly.lines);
-      } catch (e) {
-        store.commit("PlayMusic/setNoLyric", true);
+      if (isLogin()) {
+        httpCancel.abort("api/song/url");
+        const musicUrlRes = await musicPlayHttp.getMusicUrl({ id });
+        store.commit("PlayMusic/setCurrentMusicUrl", musicUrlRes.data.data[0]);
       }
+      httpCancel.abort("api/lyric");
+      musicPlayHttp.getMusicLyric({ id }).then((musicLyricRes) => {
+        try {
+          if (store.state.PlayMusic.NoLyric) {
+            store.commit("PlayMusic/setNoLyric", false);
+          }
+          const ly: {
+            lines: { time: number; txt: string }[];
+          } = new Lyric(musicLyricRes.data.lrc.lyric);
+          store.commit("PlayMusic/setCurrentMusicLyric", ly.lines);
+        } catch (e) {
+          store.commit("PlayMusic/setNoLyric", true);
+        }
+      });
     };
 
     const currentMusicId = computed(() => {

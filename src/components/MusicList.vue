@@ -47,6 +47,7 @@ export default defineComponent({
 
 <style scoped lang="less">
 .musicList {
+  transform: translate3d(0, 0, 0);
   li {
     height: 60px;
     display: flex;

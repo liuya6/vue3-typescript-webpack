@@ -15,7 +15,7 @@
     "
   >
     <dt>
-      <img :src="`${item.coverImgUrl}?param=100y100`" alt="" />
+      <img v-lazy="`${item.coverImgUrl}?param=100y100`" alt="" />
     </dt>
     <dd v-for="(child, i) in item.tracks" :key="child.id">
       {{ `${i + 1}. ${child.first}-${child.second}` }}

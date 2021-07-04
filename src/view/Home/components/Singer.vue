@@ -172,6 +172,7 @@ export default defineComponent({
 
 <style scoped lang="less">
 .wrapper {
+  transform: translate3d(0, 0, 0);
   dl {
     dt {
       line-height: 20px;

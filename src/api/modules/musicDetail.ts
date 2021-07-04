@@ -22,9 +22,6 @@ export function getMusicDetail(params: { ids: string }) {
     method: "get",
     url: "api/song/detail",
     params,
-    headers: {
-      loading: true,
-    },
   });
 }
 
@@ -35,7 +32,10 @@ export function getSingerPlayListDetail(params: {
   return http({
     method: "get",
     url: "api/artist/top/song",
-    params,
+    params: {
+      timerstamp: Date.now(),
+      ...params,
+    },
     headers: {
       loading: true,
     },
