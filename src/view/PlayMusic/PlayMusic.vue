@@ -152,6 +152,7 @@ export default defineComponent({
   bottom: 0;
   z-index: 99;
   background-color: #f2f3f4;
+  transform: translate3d(0, 0, 0);
   .background {
     position: absolute;
     width: 300%;
