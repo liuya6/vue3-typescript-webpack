@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
 const HappyPack = require("happypack");
@@ -38,6 +39,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./public/index.html"),
+      favicon: path.resolve(__dirname, "./public/favicon.ico"),
       filename: "index.html",
     }),
 
@@ -55,7 +57,12 @@ module.exports = {
       //共享进程池
       threadPool: happyThreadPool,
       //允许 HappyPack 输出日志
-      verbose: true,
+      // verbose: true,
+    }),
+
+    new webpack.DefinePlugin({
+      __VUE_OPTIONS_API__: false,
+      __VUE_PROD_DEVTOOLS__: false,
     }),
   ],
 

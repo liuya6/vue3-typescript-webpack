@@ -26,6 +26,7 @@
             </van-button>
           </div>
         </van-form>
+        <p class="qrText">使用网易云账号登录</p>
       </div>
     </van-tab>
     <van-tab title="二维码登录">
@@ -33,7 +34,7 @@
         <Qrcode :text="qrUrl" width="150" height="150" />
       </div>
       <p class="qrText">{{ qrStatusText }}</p>
-      <p class="qrText">请打开网易云音乐扫码登录</p>
+      <p class="qrText">长按保存图片到相册，使用网易云音乐扫码登录</p>
     </van-tab>
   </van-tabs>
 </template>
@@ -62,8 +63,6 @@ import { userHttp } from "@/api";
 
 export default defineComponent({
   name: "Login",
-
-  components: {},
 
   setup() {
     const active = ref(0);
@@ -108,7 +107,7 @@ export default defineComponent({
           checkQrStatus();
         }, 3000);
       }
-      console.log(state.qrUrl, "qrUrl");
+      // console.log(state.qrUrl, "qrUrl");
     };
 
     getQr();

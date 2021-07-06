@@ -7,7 +7,7 @@ const router = createRouter({
       path: "/",
       component: () => import("../view/Home/Home.vue"),
       meta: {
-        zIndex: 1,
+        index: 1,
         keepAlive: true,
       },
       children: [
@@ -41,21 +41,33 @@ const router = createRouter({
       path: "/detail",
       name: "musicDetail",
       component: () => import("../view/MusicDetail/MusicDetail.vue"),
+      meta: {
+        index: 2,
+      },
     },
     {
       path: "/search",
       name: "musicSearch",
       component: () => import("../view/MusicSearch/MusicSearch.vue"),
+      meta: {
+        index: 2,
+      },
     },
     {
       path: "/login",
       name: "login",
       component: () => import("../view/User/Login.vue"),
+      meta: {
+        index: 2,
+      },
     },
     {
       path: "/list",
       name: "playList",
       component: () => import("../view/User/UserPlayList.vue"),
+      meta: {
+        index: 2,
+      },
     },
   ],
 });

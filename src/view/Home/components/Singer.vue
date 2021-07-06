@@ -44,9 +44,8 @@ import {
 } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import numPinyin from "@/utils/pinyin";
+import { numPinyin, getPinyin } from "@/utils/pinyin";
 import { homeHttp } from "@/api";
-const pinyin = require("pinyin");
 
 interface SingerList {
   [key: string]: Singer[];
@@ -71,9 +70,7 @@ export default defineComponent({
       let artists: Singer[] = res.data.artists;
       let numPinyinList = Object.keys(numPinyin);
       artists.map((item: Singer) => {
-        let py = pinyin(item.name[0], {
-          style: pinyin.STYLE_FIRST_LETTER,
-        })[0][0];
+        let py = getPinyin.chineseToPinYin(item.name[0]).charAt(0);
         if (numPinyinList.indexOf(py) >= 0) {
           item.initial = numPinyin[py];
         } else {

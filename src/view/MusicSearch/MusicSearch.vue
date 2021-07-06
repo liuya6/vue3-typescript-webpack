@@ -4,7 +4,13 @@
     <div class="topContent">
       <span class="iconfont" @click="goBack">&#xe659;</span>
       <p>
-        <input type="text" placeholder="搜索歌曲，歌手" v-model="search" />
+        <input
+          type="text"
+          placeholder="搜索歌曲，歌手"
+          v-model="search"
+          @focus="isFocus = true"
+          @blur="isFocus = false"
+        />
       </p>
       <span class="iconfont" v-show="search" @click="search = ''"
         >&#xe61a;</span
@@ -34,7 +40,7 @@
       :limit="limit"
       ref="scroll"
     >
-      <MusicList :musicList="musicList"></MusicList>
+      <MusicList :musicList="musicList" />
     </Scroll>
     <SearchKey
       v-show="!musicList.length"
@@ -88,6 +94,7 @@ export default defineComponent({
       search: "",
       notRequestSuggest: false,
       showSuggest: true,
+      isFocus: false,
       suggestList: {
         songs: [], // 歌曲
         playlists: [], // 歌单
@@ -117,7 +124,8 @@ export default defineComponent({
 
     const getSearchSuggest = (function () {
       const fn = async () => {
-        if (!searchValue.value || state.notRequestSuggest) return;
+        if (!searchValue.value || state.notRequestSuggest || !state.isFocus)
+          return;
         const result = await musicSearchHttp.searchSuggest({
           keywords: searchValue.value,
         });

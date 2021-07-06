@@ -11,8 +11,8 @@
   </div>
 </template>
 
-<script>
-import HomeHeader from "./components/HomeHeader";
+<script lang="ts">
+import HomeHeader from "./components/HomeHeader.vue";
 
 export default {
   name: "Home",

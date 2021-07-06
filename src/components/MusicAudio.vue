@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, watch } from "vue";
+import { computed, defineComponent, ref, watch } from "vue";
 import { useStore } from "vuex";
 
 import observer from "@/plugins/bus";
@@ -68,20 +68,20 @@ export default defineComponent({
     });
 
     const ready = (e: Event) => {
-      console.log("ready");
       const audio = e.target as HTMLAudioElement;
       context.emit("durationChange", audio.duration);
       context.emit("setSongStatus", true);
     };
 
     const playing = (e: Event) => {
-      console.log("playing");
-      observer.$emit("playing");
+      const { name, ar } = store.state.PlayMusic.currentMusic as MusicDetail;
+      const author = ar.map((item) => item.name).join(",");
+      document.title = `${name}-${author}`;
     };
 
     const paused = (e: Event) => {
       console.log("paused");
-      observer.$emit("paused");
+      // observer.$emit("paused");
     };
 
     const error = (e: Event) => {

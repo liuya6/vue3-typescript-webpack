@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, nextTick } from "vue";
 
 import QRCode from "qrcodejs2";
 
@@ -16,12 +16,14 @@ export default defineComponent({
     height: String,
   },
 
-  mounted() {
-    this.$nextTick(() => {
-      new QRCode("qr", {
-        text: this.$props.text,
-        width: Number(this.$props.width),
-        height: Number(this.$props.height),
+  setup(props) {
+    onMounted(() => {
+      nextTick(() => {
+        new QRCode("qr", {
+          text: props.text,
+          width: Number(props.width),
+          height: Number(props.height),
+        });
       });
     });
   },
