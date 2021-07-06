@@ -1,13 +1,21 @@
 <template>
   <ul class="musicList">
-    <li v-for="(item, i) in musicList" :key="item.id" @click="play(item)">
+    <li
+      v-for="(item, i) in musicList"
+      :key="item.id"
+      @click="play(item)"
+      :class="{
+        disable: isDisable(item),
+      }"
+    >
       <span>
         {{ i + 1 }}
       </span>
       <div>
         <p>{{ item.name }}</p>
         <p>
-          <span v-for="(child, j) in item.ar" :key="j">{{ child.name }}</span>
+          <span v-for="(child, j) in item.ar" :key="j">{{ child.name }},</span>
+          <span>{{ `<${item.al.name}>` }}</span>
         </p>
       </div>
     </li>
@@ -16,8 +24,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { useRouter } from "vue-router";
+import { Dialog } from "vant";
 
 import { playMusic, playMusics } from "@/utils/player";
+import { isLogin } from "@/utils/user";
 
 import MusicDetail from "@/view/MusicDetail/MusicDetail.vue";
 
@@ -30,7 +41,21 @@ export default defineComponent({
   },
 
   setup(props) {
+    const router = useRouter();
+
     const play = (item: MusicDetail) => {
+      if (isDisable(item)) {
+        return Dialog.confirm({
+          title: "提示",
+          message: "有些歌得登录之后才能听，是否登录？",
+        })
+          .then(() => {
+            router.push("/login");
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
       if (props.showPlay) {
         playMusics(item);
       } else {
@@ -38,8 +63,17 @@ export default defineComponent({
       }
     };
 
+    const isDisable = (item: MusicDetail) => {
+      if (isLogin()) {
+        return false;
+      } else {
+        return !item.playable;
+      }
+    };
+
     return {
       play,
+      isDisable,
     };
   },
 });
@@ -63,8 +97,8 @@ export default defineComponent({
         top: 0;
         bottom: 0;
         right: 0;
-        background-color: #ccc;
-        opacity: 0.6;
+        background-color: #eee;
+        opacity: 0.8;
       }
     }
 
@@ -88,6 +122,13 @@ export default defineComponent({
         font-size: 13px;
         margin-top: 5px;
         color: #7a7b7a;
+      }
+      span {
+        &:last-child {
+          font-size: 12px;
+          padding-left: 5px;
+          color: #999;
+        }
       }
     }
   }

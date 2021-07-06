@@ -1,5 +1,6 @@
 <template>
   <audio
+    v-if="musicUrl"
     :src="musicUrl"
     autoplay
     ref="playAudio"
@@ -18,6 +19,7 @@ import { useStore } from "vuex";
 
 import observer from "@/plugins/bus";
 import { isLogin } from "@/utils/user";
+import { Notify } from "vant";
 
 export default defineComponent({
   name: "MusicAudio",
@@ -40,6 +42,7 @@ export default defineComponent({
         const id =
           store.state.PlayMusic.currentMusic &&
           store.state.PlayMusic.currentMusic.id;
+        if (!id) return "";
         return `https://music.163.com/song/media/outer/url?id=${id}`;
       }
     });
@@ -87,6 +90,10 @@ export default defineComponent({
     const error = (e: Event) => {
       console.log("error");
       context.emit("musicError");
+      return Notify({
+        type: "danger",
+        message: "资源走丢了，已切换到下一首~",
+      });
       // context.emit("setSongStatus", false);
     };
 

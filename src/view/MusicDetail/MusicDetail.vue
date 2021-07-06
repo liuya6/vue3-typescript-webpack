@@ -60,8 +60,9 @@ import {
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { musicDetailHttp } from "@/api";
-import { filterCount } from "@/utils/filter";
 
+import { filterCount } from "@/utils/filter";
+import { mapTrackPlayableStatus } from "@/utils/track";
 import observer from "@/plugins/bus";
 
 export default defineComponent({
@@ -73,7 +74,7 @@ export default defineComponent({
     const topFixedFlag = ref(false);
     const musicDetailData = reactive({
       playlist: {},
-      songs: [],
+      songs: [] as MusicDetail[] | [],
     });
 
     const singerDetail = computed(() => {
@@ -100,16 +101,24 @@ export default defineComponent({
         id,
       });
       if (isSinger.value) {
-        musicDetailData.songs = result.data.songs;
+        musicDetailData.songs = mapTrackPlayableStatus(result.data.songs);
       } else {
         let playlist = result.data.playlist;
+        let tracks = playlist.tracks;
+        playlist.tracks = mapTrackPlayableStatus(
+          tracks,
+          result.data.privileges
+        );
         const trackIds = playlist.trackIds as any[];
         const tracksLength = playlist.tracks.length;
         const trackIdsLength = trackIds.length;
         if (trackIdsLength > tracksLength) {
           const ids = trackIds.map((item: any) => item.id).join(",");
           musicDetailHttp.getMusicDetail({ ids }).then((res) => {
-            playlist.tracks = res.data.songs;
+            playlist.tracks = mapTrackPlayableStatus(
+              res.data.songs,
+              res.data.privileges
+            );
           });
         }
         musicDetailData.playlist = playlist;
@@ -125,15 +134,10 @@ export default defineComponent({
       topFixedFlag.value = window.scrollY > maxY;
     }
 
-    function getSingerName(arr: { name: string }[]) {
-      return arr.map((item) => item.name).toString();
-    }
-
     function playAll() {
       let songArr = isSinger.value
         ? musicDetailData.songs
         : (musicDetailData.playlist as any).tracks;
-      // console.log(songArr, "songArr", musicDetailData, isSinger);
       store.commit("PlayMusic/setPlayListIndex", 0);
       store.dispatch("PlayMusic/setPlayLists", {
         type: "all",
@@ -146,7 +150,6 @@ export default defineComponent({
     return {
       ...toRefs(musicDetailData),
       filterCount,
-      getSingerName,
       singerDetail,
       isSinger,
       playAll,

@@ -1,6 +1,6 @@
 <template>
   <div class="homeHeader">
-    <Header :title="'M U S I C - L Y Q'">
+    <Header :title="'M U S I C'">
       <template v-slot:left>
         <span class="iconfont" @click="sidebar.show()">&#xe606;</span>
       </template>

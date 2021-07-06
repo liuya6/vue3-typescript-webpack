@@ -1,6 +1,7 @@
 import { Module } from "vuex";
 
 import { deepClone, randomIndex } from "@/utils/tools";
+import { isLogin } from "@/utils/user";
 
 interface ModuleState {
   currentMusic: MusicDetail | null;
@@ -79,8 +80,10 @@ const PlayMusic: Module<ModuleState, RootState> = {
     ) {
       let type = payload.type;
       let result = payload.params;
-      const playList = deepClone(state.playList);
-
+      let playList = deepClone(state.playList);
+      if (!isLogin()) {
+        playList = playList.filter((item: MusicDetail) => item.playable);
+      }
       switch (type) {
         case "all":
           break;

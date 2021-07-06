@@ -13,6 +13,7 @@ import {
   Field,
   Form,
   Button,
+  Notify,
 } from "vant";
 import { App } from "vue";
 
@@ -31,5 +32,6 @@ export function useVant(app: App) {
     .use(Tab)
     .use(Field)
     .use(Form)
-    .use(Button);
+    .use(Button)
+    .use(Notify);
 }

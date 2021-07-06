@@ -93,6 +93,7 @@ export default defineComponent({
         const musicUrlRes = await musicPlayHttp.getMusicUrl({ id });
         store.commit("PlayMusic/setCurrentMusicUrl", musicUrlRes.data.data[0]);
       }
+      if (!id) return;
       httpCancel.abort("api/lyric");
       musicPlayHttp.getMusicLyric({ id }).then((musicLyricRes) => {
         try {
@@ -152,6 +153,7 @@ export default defineComponent({
   bottom: 0;
   z-index: 99;
   background-color: #f2f3f4;
+  overflow: hidden;
   .background {
     position: absolute;
     width: 300%;
@@ -245,12 +247,30 @@ export default defineComponent({
     }
   }
 }
-.slide-enter-active,
-.slide-leave-active {
-  transition: top 0.5s ease;
+
+.slide-enter-active {
+  animation: translateEnter 0.5s ease;
 }
-.slide-enter-from,
-.slide-leave-to {
-  top: 100vh;
+
+.slide-leave-active {
+  animation: translateLeave 0.5s ease;
+}
+
+@keyframes translateEnter {
+  0% {
+    transform: translate3d(0, 100%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes translateLeave {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 100%, 0);
+  }
 }
 </style>
