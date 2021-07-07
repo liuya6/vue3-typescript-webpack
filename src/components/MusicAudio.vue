@@ -77,14 +77,16 @@ export default defineComponent({
     };
 
     const playing = (e: Event) => {
-      const { name, ar } = store.state.PlayMusic.currentMusic as MusicDetail;
-      const author = ar.map((item) => item.name).join(",");
-      document.title = `${name}-${author}`;
+      if (store.state.PlayMusic.currentMusic) {
+        const { name, ar } = store.state.PlayMusic.currentMusic as MusicDetail;
+        const author = ar.map((item) => item.name).join(",");
+        document.title = `${name}-${author}`;
+      }
     };
 
     const paused = (e: Event) => {
       console.log("paused");
-      // observer.$emit("paused");
+      document.title = "摇起来";
     };
 
     const error = (e: Event) => {
@@ -94,7 +96,6 @@ export default defineComponent({
         type: "danger",
         message: "资源走丢了，已切换到下一首~",
       });
-      // context.emit("setSongStatus", false);
     };
 
     const updateTime = (e: Event) => {

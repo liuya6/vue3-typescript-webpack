@@ -69,6 +69,11 @@ const router = createRouter({
         index: 2,
       },
     },
+    {
+      path: "/album",
+      name: "album",
+      component: () => import("../view/Album/Album.vue"),
+    },
   ],
 });
 

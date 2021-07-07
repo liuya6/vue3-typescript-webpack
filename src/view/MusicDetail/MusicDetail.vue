@@ -9,41 +9,27 @@
       ref="topEl"
     >
       <span class="iconfont">&#xe659; </span>
-      {{ isSinger ? "歌手" : "歌单" }}
+      {{ musicListData.title }}
     </div>
-    <img
-      v-lazy="
-        isSinger
-          ? singerDetail && `${singerDetail.img1v1Url}?param=375y300`
-          : playlist.coverImgUrl
-      "
-      alt=""
-    />
+    <img v-lazy="musicListData.bg" alt="" />
     <div class="btm">
       <p class="name">
-        {{ isSinger ? singerDetail && singerDetail.name : playlist.name }}
+        {{ musicListData.tip }}
       </p>
-      <p class="playCount" v-if="!isSinger">
+      <p class="playCount" v-if="!isSinger && !isRecommend && !isAlbum">
         <span class="iconfont">&#xe619; </span>
         {{ filterCount(playlist.playCount) }}
       </p>
     </div>
   </div>
-  <div
-    class="content"
-    v-if="(playlist && playlist.tracks) || (songs && songs.length)"
-  >
+  <div class="content" v-if="musicListData.list && musicListData.list.length">
     <div class="contentTop">
       <span class="iconfont" @click="playAll">&#xe6ca;</span>
       <span>{{ isSinger ? "热门歌曲" : "播放全部" }}</span>
-      <span
-        >（共{{ isSinger ? songs.length : playlist.tracks.length }}首）</span
-      >
+      <span class="length">（共{{ musicListData.list.length }}首）</span>
+      <span class="addAll" @click="addAll">全部添加到播放列表</span>
     </div>
-    <MusicList
-      :musicList="isSinger ? songs : playlist.tracks"
-      :showPlay="true"
-    />
+    <MusicList :musicList="musicListData.list" :showPlay="true" />
   </div>
 </template>
 
@@ -60,10 +46,20 @@ import {
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { musicDetailHttp } from "@/api";
+import { userHttp } from "@/api";
 
 import { filterCount } from "@/utils/filter";
 import { mapTrackPlayableStatus } from "@/utils/track";
 import observer from "@/plugins/bus";
+import { deepClone } from "@/utils/tools";
+import { Notify } from "vant";
+
+interface MusicListData {
+  title: string;
+  tip: string;
+  bg: string;
+  list: MusicDetail[] | [];
+}
 
 export default defineComponent({
   name: "MusicDetail",
@@ -72,9 +68,14 @@ export default defineComponent({
     const store = useStore();
     const topEl = ref(null);
     const topFixedFlag = ref(false);
+    const type = computed(() => {
+      return route.query.type;
+    });
     const musicDetailData = reactive({
-      playlist: {},
+      playlist: {} as any,
       songs: [] as MusicDetail[] | [],
+      recommend: [] as MusicDetail[] | [],
+      album: {} as any,
     });
 
     const singerDetail = computed(() => {
@@ -82,13 +83,19 @@ export default defineComponent({
     });
 
     const isSinger = computed(() => {
-      const type = route.query.type;
-      return type === "singer";
+      return type.value === "singer";
+    });
+
+    const isRecommend = computed(() => {
+      return type.value === "recommend";
+    });
+
+    const isAlbum = computed(() => {
+      return type.value === "album";
     });
 
     onMounted(async () => {
       await getList();
-
       window.addEventListener("scroll", scroll);
     });
 
@@ -96,12 +103,24 @@ export default defineComponent({
       let id = route.query.id as string;
       let getMusicList = isSinger.value
         ? musicDetailHttp.getSingerPlayListDetail
+        : isRecommend.value
+        ? userHttp.getRecommendMusic
+        : isAlbum.value
+        ? userHttp.getSingerAlbumContent
         : musicDetailHttp.getPlayListDetail;
       let result = await getMusicList({
         id,
       });
       if (isSinger.value) {
         musicDetailData.songs = mapTrackPlayableStatus(result.data.songs);
+      } else if (isRecommend.value) {
+        musicDetailData.recommend = mapTrackPlayableStatus(
+          result.data.data.dailySongs
+        );
+      } else if (isAlbum.value) {
+        let songs = mapTrackPlayableStatus(result.data.songs);
+        musicDetailData.album.album = result.data.album;
+        musicDetailData.album.songs = songs;
       } else {
         let playlist = result.data.playlist;
         let tracks = playlist.tracks;
@@ -119,10 +138,13 @@ export default defineComponent({
               res.data.songs,
               res.data.privileges
             );
+            musicListData.value = getMusicListData();
           });
         }
         musicDetailData.playlist = playlist;
       }
+      // console.log(musicDetailData);
+      musicListData.value = getMusicListData();
     };
 
     onUnmounted(() => {
@@ -135,9 +157,7 @@ export default defineComponent({
     }
 
     function playAll() {
-      let songArr = isSinger.value
-        ? musicDetailData.songs
-        : (musicDetailData.playlist as any).tracks;
+      let songArr = (musicListData.value as MusicListData).list;
       store.commit("PlayMusic/setPlayListIndex", 0);
       store.dispatch("PlayMusic/setPlayLists", {
         type: "all",
@@ -147,12 +167,87 @@ export default defineComponent({
       store.commit("PlayMusic/setPlayShow", true);
     }
 
+    const addAll = () => {
+      let playList = deepClone(store.state.PlayMusic.playList);
+      if (playList.length) {
+        let songArr = (musicListData.value as MusicListData).list;
+        let filterList = songArr.filter(
+          (item: MusicDetail) =>
+            !playList.map((child: MusicDetail) => child.id).includes(item.id)
+        );
+        if (filterList.length) {
+          playList = playList.concat(filterList);
+          store
+            .dispatch("PlayMusic/setPlayLists", {
+              type: "all",
+              params: playList,
+            })
+            .then(() => {
+              return Notify({
+                type: "success",
+                message: "添加成功~",
+              });
+            });
+        } else {
+          return Notify({
+            type: "danger",
+            message: "播放列表已经有这些歌了~",
+          });
+        }
+      } else {
+        playAll();
+      }
+    };
+
+    const musicListData = ref({});
+
+    const getMusicListData = () => {
+      let data: MusicListData = {
+        title: "",
+        tip: "",
+        bg: "",
+        list: [],
+      };
+      if (isSinger.value) {
+        data.title = "歌手";
+        data.tip = singerDetail.value.name;
+        data.bg = `${singerDetail.value.img1v1Url}?param=375y300`;
+        data.list = musicDetailData.songs;
+      } else if (isRecommend.value) {
+        const date = new Date();
+        data.title = "每日歌单";
+        data.tip = `${date.getMonth() + 1}/${date.getDate()}`;
+        if (
+          musicDetailData.recommend.length &&
+          musicDetailData.recommend[0]["al"]
+        ) {
+          data.bg = `${musicDetailData.recommend[0].al.picUrl}?param=375y300`;
+        }
+        data.list = musicDetailData.recommend;
+      } else if (isAlbum.value) {
+        data.title = "专辑";
+        data.tip = musicDetailData.album.album.name;
+        data.bg = `${musicDetailData.album.album.picUrl}?param=375y300`;
+        data.list = musicDetailData.album.songs;
+      } else {
+        data.title = "歌单";
+        data.tip = musicDetailData.playlist.name;
+        data.bg = `${musicDetailData.playlist.coverImgUrl}?param=375y300`;
+        data.list = musicDetailData.playlist.tracks;
+      }
+      return data;
+    };
+
     return {
       ...toRefs(musicDetailData),
       filterCount,
       singerDetail,
       isSinger,
+      isRecommend,
+      isAlbum,
+      musicListData,
       playAll,
+      addAll,
       topEl,
       topFixedFlag,
     };
@@ -210,6 +305,7 @@ export default defineComponent({
   position: relative;
   top: -10px;
   margin-bottom: -10px;
+  min-height: calc(100vh - 300px);
   .contentTop {
     line-height: 44px;
     color: #363838;
@@ -222,8 +318,14 @@ export default defineComponent({
       width: 30px;
     }
     span {
-      &:last-child {
+      &.length {
         color: #7a7b7a;
+      }
+      &.addAll {
+        float: right;
+        font-size: 13px;
+        margin-right: 10px;
+        color: #666;
       }
     }
   }

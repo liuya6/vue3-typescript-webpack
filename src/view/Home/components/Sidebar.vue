@@ -19,6 +19,33 @@
       >
         我的歌单
       </div>
+      <div
+        v-show="isLogins"
+        class="bd-btm"
+        @click="
+          $router.push({
+            name: 'musicDetail',
+            query: {
+              type: 'recommend',
+            },
+          })
+        "
+      >
+        今日推荐
+      </div>
+      <div
+        class="bd-btm"
+        @click="
+          $router.push({
+            name: 'album',
+            query: {
+              id: 6452,
+            },
+          })
+        "
+      >
+        杰伦永远的神~
+      </div>
       <div v-show="isLogins" @click="loginOut">退出账号</div>
     </div>
   </van-popup>

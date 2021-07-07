@@ -135,6 +135,7 @@ export default defineComponent({
       } else {
         await store.commit("PlayMusic/setPlayList", []);
         store.commit("PlayMusic/setCurrentMusic", null);
+        store.commit("PlayMusic/setCurrentMusicUrl", null);
         musicListShow.value = false;
       }
     };

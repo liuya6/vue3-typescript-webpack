@@ -8,6 +8,7 @@
         <dd
           v-for="child in item"
           :key="child.id"
+          class="bd-btm"
           @click="getSingerMusic(child)"
         >
           <div>
@@ -183,7 +184,7 @@ export default defineComponent({
       display: flex;
       align-items: center;
       padding-left: 10px;
-      border-bottom: 1px solid #ccc;
+      //border-bottom: 1px solid #ccc;
       margin: 0 5px;
       &:last-child {
         border-bottom: none;

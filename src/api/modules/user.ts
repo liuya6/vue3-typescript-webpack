@@ -1,4 +1,5 @@
 import { http } from "@/api/axios";
+import { LocationQueryValue } from "vue-router";
 
 // 获取二维码的key
 export function getQrKey() {
@@ -107,9 +108,52 @@ export function userMusicLikeList(data: { uid: number }) {
   return http({
     method: "post",
     url: "api/likelist",
-    params: {
+    data: {
       timerstamp: Date.now(),
       ...data,
+    },
+  });
+}
+
+// 获取每日推荐歌曲 需登录
+export function getRecommendMusic() {
+  return http({
+    method: "post",
+    url: "api/recommend/songs",
+    headers: {
+      loading: true,
+    },
+  });
+}
+
+// 获取歌手专辑
+export function getSingerAlbum(data: { id: string | LocationQueryValue[] }) {
+  return http({
+    method: "post",
+    url: "api/artist/album",
+    data: {
+      limit: 50,
+      ...data,
+    },
+    headers: {
+      loading: true,
+    },
+  });
+}
+
+// 获取专辑内容 /album
+export function getSingerAlbumContent(params: {
+  id: string | LocationQueryValue[];
+}) {
+  return http({
+    method: "get",
+    url: "api/album",
+    params: {
+      timerstamp: Date.now(),
+      ...params,
+    },
+    headers: {
+      loading: true,
     },
   });
 }

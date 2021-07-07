@@ -88,12 +88,12 @@ export default defineComponent({
     });
 
     const getMusic = async (id: number) => {
+      if (!id) return;
       if (isLogin()) {
         httpCancel.abort("api/song/url");
         const musicUrlRes = await musicPlayHttp.getMusicUrl({ id });
         store.commit("PlayMusic/setCurrentMusicUrl", musicUrlRes.data.data[0]);
       }
-      if (!id) return;
       httpCancel.abort("api/lyric");
       musicPlayHttp.getMusicLyric({ id }).then((musicLyricRes) => {
         try {
@@ -105,6 +105,7 @@ export default defineComponent({
           } = new Lyric(musicLyricRes.data.lrc.lyric);
           store.commit("PlayMusic/setCurrentMusicLyric", ly.lines);
         } catch (e) {
+          console.log(e, "error");
           store.commit("PlayMusic/setNoLyric", true);
         }
       });

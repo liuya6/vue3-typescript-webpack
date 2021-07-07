@@ -31,9 +31,16 @@ declare global {
   // 音乐详情
   interface MusicDetail {
     a: null;
-    al: { [key: string]: any }[];
+    al: {
+      id: number;
+      name: string;
+      pic: number;
+      picUrl: string;
+      pic_str: string;
+      tns: any[];
+    };
     alia: string[];
-    ar: { [key: string]: any }[];
+    ar: { alias: any[]; id: number; name: string; tns: any[] }[];
     cd: string;
     cf: string;
     copyright: number;
@@ -57,26 +64,31 @@ declare global {
     originSongSimpleData: null;
     pop: number;
     privilege: {
-      chargeInfoList: {rate: number, chargeUrl: null, chargeMessage: null, chargeType: number}[]
-      cp: number
-      cs: boolean
-      dl: number
-      downloadMaxbr: number
-      fee: number
-      fl: number
-      flag: number
-      freeTrialPrivilege: {resConsumable: boolean, userConsumable: boolean}
-      id: number
-      maxbr: number
-      payed: number
-      pl: number
-      playMaxbr: number
-      preSell: boolean
-      rscl: null
-      sp: number
-      st: number
-      subp: number
-      toast: boolean
+      chargeInfoList: {
+        rate: number;
+        chargeUrl: null;
+        chargeMessage: null;
+        chargeType: number;
+      }[];
+      cp: number;
+      cs: boolean;
+      dl: number;
+      downloadMaxbr: number;
+      fee: number;
+      fl: number;
+      flag: number;
+      freeTrialPrivilege: { resConsumable: boolean; userConsumable: boolean };
+      id: number;
+      maxbr: number;
+      payed: number;
+      pl: number;
+      playMaxbr: number;
+      preSell: boolean;
+      rscl: null;
+      sp: number;
+      st: number;
+      subp: number;
+      toast: boolean;
     };
     pst: number;
     publishTime: number;
@@ -91,8 +103,8 @@ declare global {
     st: number;
     t: number;
     v: number;
-    playable?:boolean;
-    reason?:string;
+    playable?: boolean;
+    reason?: string;
   }
 
   // 音乐url
@@ -132,43 +144,43 @@ declare global {
 
   // 用户信息
   interface UserInfo {
-    accountStatus: number
-    accountType: number
-    anchor: boolean
-    authStatus: number
-    authenticated: boolean
-    authenticationTypes: number
-    authority: number
-    avatarDetail: null
-    avatarImgId: number
-    avatarUrl: string
-    backgroundImgId: number
-    backgroundUrl: string
-    birthday: number
-    city: number
-    createTime: number
-    defaultAvatar: boolean
-    description: null
-    detailDescription: null
-    djStatus: number
-    expertTags: null
-    experts: null
-    followed: boolean
-    gender: number
-    lastLoginIP: string
-    lastLoginTime: number
-    locationStatus: number
-    mutual: boolean
-    nickname: string
-    province: number
-    remarkName: null
-    shortUserName: string
-    signature: string
-    userId: number
-    userName: string
-    userType: number
-    vipType: number
-    viptypeVersion: number
+    accountStatus: number;
+    accountType: number;
+    anchor: boolean;
+    authStatus: number;
+    authenticated: boolean;
+    authenticationTypes: number;
+    authority: number;
+    avatarDetail: null;
+    avatarImgId: number;
+    avatarUrl: string;
+    backgroundImgId: number;
+    backgroundUrl: string;
+    birthday: number;
+    city: number;
+    createTime: number;
+    defaultAvatar: boolean;
+    description: null;
+    detailDescription: null;
+    djStatus: number;
+    expertTags: null;
+    experts: null;
+    followed: boolean;
+    gender: number;
+    lastLoginIP: string;
+    lastLoginTime: number;
+    locationStatus: number;
+    mutual: boolean;
+    nickname: string;
+    province: number;
+    remarkName: null;
+    shortUserName: string;
+    signature: string;
+    userId: number;
+    userName: string;
+    userType: number;
+    vipType: number;
+    viptypeVersion: number;
   }
 }
 

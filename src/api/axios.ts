@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig, CancelTokenSource } from "axios";
-import { Toast } from "vant";
+import { Toast, Notify } from "vant";
+
+Toast.setDefaultOptions({ duration: 20000 });
 
 const instance = axios.create({
   timeout: 20000,
@@ -60,12 +62,19 @@ instance.interceptors.response.use(
   },
   function (error) {
     // 对响应错误做点什么
+    Toast.clear();
     console.log(error.response);
     if (error.response) {
       if (error.response.status === 504) {
-        return Toast.fail("服务器开小差了，请稍后重试...");
+        return Notify({
+          type: "danger",
+          message: "服务器开小差了，请稍后重试...",
+        });
       }
-      Toast.fail(error.response.data.message);
+      Notify({
+        type: "danger",
+        message: error.response.data.message,
+      });
     }
     // 删除cancel token
     const url = error.config.url;

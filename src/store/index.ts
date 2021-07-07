@@ -9,7 +9,7 @@ const store = createStore({
   strict: true,
   modules: { Home, PlayMusic, User },
   plugins: [
-    createLogger(),
+    // createLogger(),
     createPersistedState({ storage: window.sessionStorage }),
   ],
 });
