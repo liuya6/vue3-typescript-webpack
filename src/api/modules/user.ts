@@ -29,27 +29,33 @@ export function checkQrStatus(data: { key: string }) {
 // 检查登录状态
 export function checkLoginStatus() {
   return http({
-    method: "post",
+    method: "get",
     url: "api/login/status",
+    params: {
+      timerstamp: Date.now(),
+    },
   });
 }
 
 // 退出登录
 export function loginOut() {
   return http({
-    method: "post",
+    method: "get",
     url: "api/logout",
+    params: {
+      timerstamp: Date.now(),
+    },
   });
 }
 
 // 手机登录
-export function telLogin(data: { phone: string; md5_password: string }) {
+export function telLogin(params: { phone: string; md5_password: string }) {
   return http({
-    method: "post",
+    method: "get",
     url: "api/login/cellphone",
-    data: {
+    params: {
       timerstamp: Date.now(),
-      ...data,
+      ...params,
     },
     headers: {
       loading: true,
