@@ -129,6 +129,10 @@ export default defineComponent({
     const musicEnds = () => {
       //音乐结束
       songStatus.value = false;
+      const playList = store.state.PlayMusic.playList;
+      const playCount = store.state.PlayMusic.playCount;
+      console.log(playCount, playList.length);
+      if (playCount >= playList.length) return;
       store.dispatch("PlayMusic/setPlayListIndexS", {
         musicChange: "add",
         source: "auto",

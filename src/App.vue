@@ -31,6 +31,7 @@ export default defineComponent({
     // const transitionName = ref("");
     // const route = useRoute();
     store.dispatch("User/checkLoginStatus");
+    store.commit("PlayMusic/setPlayCount", 0);
 
     const userInfo = computed(() => {
       return store.state.User.userInfo;

@@ -176,7 +176,7 @@ export default defineComponent({
     padding-left: 10px;
     &.disable {
       position: relative;
-      &::after {
+      &::before {
         content: "";
         position: absolute;
         left: 0;

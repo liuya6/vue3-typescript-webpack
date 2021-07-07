@@ -35,6 +35,7 @@
       </div>
       <div
         class="bd-btm"
+        v-show="isLogins"
         @click="
           $router.push({
             name: 'album',
@@ -98,6 +99,9 @@ export default defineComponent({
         message: "确定退出账号吗？",
       }).then(() => {
         store.dispatch("User/loginOut");
+        store.commit("PlayMusic/setPlayList", []);
+        store.commit("PlayMusic/setCurrentMusic", null);
+        store.commit("PlayMusic/setCurrentMusicUrl", null);
       });
     };
 

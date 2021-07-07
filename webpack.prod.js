@@ -2,14 +2,50 @@ const path = require("path");
 const { merge } = require("webpack-merge");
 const WebpackCommon = require("./webpack.common");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
-
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserJSPlugin = require("terser-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-// const BundleAnalyzerPlugin =
-//   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const CompressionPlugin = require("compression-webpack-plugin");
+const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
+
+let plugins = [
+  new CleanWebpackPlugin(),
+  new MiniCssExtractPlugin({
+    filename: "css/[name].[contenthash:8].css",
+  }),
+  new CompressionPlugin({
+    exclude: /\.(html|ico)$/,
+  }), //gzip
+  new ParallelUglifyPlugin({
+    // 压缩js的一些配置
+    uglifyJS: {
+      output: {
+        beautify: false, // 不需要格式化，以最紧凑的方式输出
+        comments: false, // 删除注释
+      },
+      warnings: false, // 删除未使用一些代码时引起的警告
+      compress: {
+        drop_console: true, // 删除所有console.log
+        // 是否内嵌虽定义，但只使用了一次的变量
+        // 比如var x = 2, y = 10, z = x + y 变成 z = 12
+        collapse_vars: true,
+        // 提出多次出现但没定义的变量，将其变成静态值；
+        // 比如x = 'xx', y = 'xx' 变成 var a = 'xx', x = a, y = a
+        reduce_vars: true,
+      },
+    },
+  }),
+];
+
+const analyzer = JSON.parse(process.env.npm_config_argv)["original"][2];
+// 运行 yarn build -o analyzer 可查看打包分析仪
+if (analyzer) {
+  // 可视化分析打包数据
+  plugins.push(new BundleAnalyzerPlugin());
+  console.log(plugins, "plugins");
+}
 
 module.exports = merge(WebpackCommon, {
   mode: "production",
@@ -51,29 +87,13 @@ module.exports = merge(WebpackCommon, {
     ],
   },
 
-  plugins: [
-    // new BundleAnalyzerPlugin(), // 可视化分析打包数据
-
-    new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin({
-      filename: "css/[name].[contenthash:8].css",
-    }),
-    new CompressionPlugin({
-      exclude: /\.(html|ico)$/,
-    }), //gzip
-  ],
+  plugins,
 
   optimization: {
     minimize: true,
     minimizer: [
       new TerserJSPlugin(), //压缩js
       new CssMinimizerPlugin(), // 压缩css
-      new TerserPlugin({
-        extractComments: false, // 去除所以注释
-        terserOptions: {
-          compress: { pure_funcs: ["console.log"] }, // 去除所以console
-        },
-      }),
     ],
     splitChunks: {
       chunks: "all",

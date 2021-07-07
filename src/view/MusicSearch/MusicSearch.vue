@@ -75,6 +75,7 @@ import { musicSearchHttp } from "@/api";
 import { throttle } from "@/utils/tools";
 import { playMusics } from "@/utils/player";
 import observer from "@/plugins/bus";
+import { mapTrackPlayableStatus } from "@/utils/track";
 
 import SearchKey from "./components/SearchKey.vue";
 
@@ -154,7 +155,7 @@ export default defineComponent({
         keywords: state.oldSearch,
       };
       const result = await musicSearchHttp.searchMusic(params);
-      const songs = result.data.result.songs;
+      const songs = mapTrackPlayableStatus(result.data.result.songs) as any;
       state.notRequestSuggest = false;
       state.musicList = state.musicList.concat(songs);
       await nextTick(() => {

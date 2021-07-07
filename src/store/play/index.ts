@@ -12,6 +12,7 @@ interface ModuleState {
   playList: MusicDetail[] | [];
   playListIndex: number;
   NoLyric: boolean;
+  playCount: number;
 }
 
 interface RootState {
@@ -29,6 +30,7 @@ const PlayMusic: Module<ModuleState, RootState> = {
     playList: [], // 播放列表
     playListIndex: 0, // 当前音乐列表播放的歌曲index
     NoLyric: false, // 判断是否有歌词（纯音乐）
+    playCount: 0, // 用来判断是否继续播放下一首
   },
   getters: {
     currentMusicId: (state: ModuleState) => {
@@ -65,6 +67,9 @@ const PlayMusic: Module<ModuleState, RootState> = {
     },
     setNoLyric(state: ModuleState, payload: boolean) {
       state.NoLyric = payload;
+    },
+    setPlayCount(state: ModuleState, payload: number) {
+      state.playCount = payload;
     },
   },
   actions: {

@@ -31,6 +31,10 @@ export default defineComponent({
       return store.state.PlayMusic.playListIndex;
     });
 
+    const playCount = computed(() => {
+      return store.state.PlayMusic.playCount;
+    });
+
     const musicUrl = computed(() => {
       if (isLogin()) {
         return (
@@ -71,12 +75,14 @@ export default defineComponent({
     });
 
     const ready = (e: Event) => {
+      console.log("ready");
       const audio = e.target as HTMLAudioElement;
       context.emit("durationChange", audio.duration);
       context.emit("setSongStatus", true);
     };
 
     const playing = (e: Event) => {
+      if (playCount.value > 0) store.commit("PlayMusic/setPlayCount", 0);
       if (store.state.PlayMusic.currentMusic) {
         const { name, ar } = store.state.PlayMusic.currentMusic as MusicDetail;
         const author = ar.map((item) => item.name).join(",");
@@ -91,6 +97,8 @@ export default defineComponent({
 
     const error = (e: Event) => {
       console.log("error");
+      console.log(playCount.value + 1);
+      store.commit("PlayMusic/setPlayCount", playCount.value + 1);
       context.emit("musicError");
       return Notify({
         type: "danger",
