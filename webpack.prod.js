@@ -39,12 +39,11 @@ let plugins = [
   }),
 ];
 
-const analyzer = JSON.parse(process.env.npm_config_argv)["original"][2];
-// 运行 yarn build -o analyzer 可查看打包分析仪
+const analyzer = process.env.npm_lifecycle_event === "analyzer";
+// 运行 yarn analyzer 可查看打包分析仪
 if (analyzer) {
   // 可视化分析打包数据
   plugins.push(new BundleAnalyzerPlugin());
-  console.log(plugins, "plugins");
 }
 
 module.exports = merge(WebpackCommon, {
