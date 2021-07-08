@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import "reset-css";
 import "./style/index.less";
+import "./utils/smoothscroll.min";
 import "amfe-flexible";
 
 import router from "./router/index";
