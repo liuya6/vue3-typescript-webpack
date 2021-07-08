@@ -71,6 +71,7 @@ export default defineComponent({
     };
 
     const playing = (e: Event) => {
+      context.emit("setSongStatus", true);
       if (playCount.value > 0) store.commit("PlayMusic/setPlayCount", 0);
       if (store.state.PlayMusic.currentMusic) {
         const { name, ar } = store.state.PlayMusic.currentMusic as MusicDetail;
