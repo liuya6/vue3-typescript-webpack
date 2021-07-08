@@ -14,5 +14,4 @@
 https://github.com/Binaryify/NeteaseCloudMusicApi
 
 ###### 线上地址
-
-https://vue3-typescript-webpack.vercel.app/
+http://159.75.3.25/
