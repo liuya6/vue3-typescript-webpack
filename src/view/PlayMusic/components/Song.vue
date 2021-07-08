@@ -98,7 +98,9 @@ export default defineComponent({
     };
 
     const getSongStatus = (value: boolean) => {
-      songStatus.value = value;
+      if (songStatus.value !== value) {
+        songStatus.value = value;
+      }
     };
 
     const play = () => {

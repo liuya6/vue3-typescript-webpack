@@ -51,17 +51,6 @@ export default defineComponent({
       }
     });
 
-    // watch(musicUrl, () => {
-    //   if (!musicUrl.value) {
-    //     const playList = store.state.PlayMusic.playList;
-    //     if (!playList.length) return;
-    //     store.dispatch("PlayMusic/setPlayListIndexS", {
-    //       musicChange: "add",
-    //       source: "auto",
-    //     });
-    //   }
-    // });
-
     const currentMusicChange = () => {
       const currentMusic = store.state.PlayMusic.playList[playListIndex.value];
       if (currentMusic) {
@@ -92,6 +81,7 @@ export default defineComponent({
 
     const paused = (e: Event) => {
       console.log("paused");
+      context.emit("setSongStatus", false);
       document.title = "摇起来";
     };
 
@@ -100,6 +90,7 @@ export default defineComponent({
       console.log(playCount.value + 1);
       store.commit("PlayMusic/setPlayCount", playCount.value + 1);
       context.emit("musicError");
+      context.emit("setSongStatus", false);
       return Notify({
         type: "danger",
         message: "资源走丢了，已切换到下一首~",
