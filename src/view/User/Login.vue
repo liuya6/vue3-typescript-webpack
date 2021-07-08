@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { Toast } from "vant";
+import { Notify } from "vant";
 
 interface telLogin {
   phone: string;
@@ -88,7 +88,10 @@ export default defineComponent({
       };
       const result = await userHttp.telLogin(params);
       if (result.data.code !== 200) {
-        return Toast.fail(result.data.message);
+        return Notify({
+          type: "danger",
+          message: result.data.message,
+        });
       }
       store.commit("User/setCookie", result.data.cookie);
       store.commit("User/setUserInfo", result.data.profile);
