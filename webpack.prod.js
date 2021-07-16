@@ -19,7 +19,7 @@ let plugins = [
     exclude: /\.(html|ico)$/,
   }), //gzip
   new ParallelUglifyPlugin({
-    // 压缩js的一些配置
+    // 压缩js配置
     uglifyJS: {
       output: {
         beautify: false, // 不需要格式化，以最紧凑的方式输出
