@@ -19,13 +19,14 @@
       </dl>
     </div>
   </div>
-  <div class="rightNav" @click.stop>
+  <div class="rightNav">
     <ul>
       <li
         v-for="(item, i) in singerList"
         :class="{ on: titleType === i }"
         :key="item.id"
-        @click="navScroll(i)"
+        @touchstart.prevent="touchstart(i)"
+        @touchmove.prevent="navScroll"
       >
         {{ i }}
       </li>
@@ -61,7 +62,7 @@ export default defineComponent({
     const singerData: { singerList: SingerList | {}; titleType: string } =
       reactive({
         singerList: {},
-        titleType: "",
+        titleType: "A",
       });
 
     let scrollArr: { type: string; top: number }[] = [];
@@ -138,16 +139,34 @@ export default defineComponent({
       singerData.titleType = typeArr.pop() as string;
     }
 
-    function aa() {
-      console.log('test')
+    let liHeight = 0;
+    let startY = 0;
+    let endY = 0;
+    let startCount = 0;
+    let top: number = 0;
+
+    function touchstart(key: string, e: TouchEvent) {
+      e = window.event as TouchEvent;
+      let clientRect = e["touches"][0];
+      startY = clientRect.clientY;
+      let li = e.target as HTMLDataElement;
+      liHeight = li.offsetHeight;
+      scrollArr.forEach((item, index) => {
+        if (item.type === key) {
+          startCount = index;
+          top = item.top;
+        }
+      });
+      window.scrollTo(0, top);
     }
 
-    function navScroll(type: string) {
-      console.log('test')
-      aa()
-      let top: number = 0;
-      scrollArr.forEach((item) => {
-        if (item.type === type) {
+    function navScroll(e: TouchEvent) {
+      let clientRect = e["touches"][0];
+      endY = clientRect.clientY;
+      let moveCount = (endY - startY) / liHeight;
+      let resultCount = Math.floor(startCount + moveCount);
+      scrollArr.forEach((item, index) => {
+        if (index === resultCount) {
           top = item.top;
         }
       });
@@ -167,6 +186,7 @@ export default defineComponent({
 
     return {
       ...toRefs(singerData),
+      touchstart,
       navScroll,
       getSingerMusic,
     };
@@ -215,11 +235,13 @@ export default defineComponent({
 .rightNav {
   position: fixed;
   width: 20px;
-  right: 5px;
+  right: 0;
   top: 50%;
   transform: translate(0, -45%);
-  z-index: 1;
+  z-index: 2;
   ul {
+    position: relative;
+    z-index: 2;
     li {
       line-height: 20px;
       text-align: center;
