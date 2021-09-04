@@ -138,7 +138,13 @@ export default defineComponent({
       singerData.titleType = typeArr.pop() as string;
     }
 
+    function aa() {
+      console.log('test')
+    }
+
     function navScroll(type: string) {
+      console.log('test')
+      aa()
       let top: number = 0;
       scrollArr.forEach((item) => {
         if (item.type === type) {
