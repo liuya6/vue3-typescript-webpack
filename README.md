@@ -31,4 +31,4 @@ https://github.com/Binaryify/NeteaseCloudMusicApi,
 https://github.com/nondanee/UnblockNeteaseMusic
 
 ###### 线上地址
-http://159.75.3.25/
+https://vue3-typescript-webpack.vercel.app/
